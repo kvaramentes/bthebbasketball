@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Μπει Δε Μπει — Basketball Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #E8593C;
+    --orange-light: #F07A5E;
+    --dark: #0D0D0D;
+    --dark2: #141414;
+    --dark3: #1C1C1C;
+    --cream: #F2EDE4;
+    --cream2: #E8E0D2;
+    --gray: #888;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-cond: 'Barlow Condensed', sans-serif;
+    --font-body: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(13,13,13,0.95), transparent);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: rgba(13,13,13,0.97); }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--orange);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cream); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cream);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--orange); }
+
+  .nav-cta {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--orange);
+    border: none;
+    padding: 10px 24px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .nav-cta:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Giant court lines background */
+  .hero-court {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(96px, 18vw, 220px);
+    line-height: 0.88;
+    letter-spacing: -2px;
+    color: var(--cream);
+    margin-bottom: 0;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.35s forwards;
+  }
+
+  .hero-title .stroke {
+    -webkit-text-stroke: 2px var(--orange);
+    color: transparent;
+  }
+
+  .hero-subtitle-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 40px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.55s forwards;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-cond);
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--cream2);
+    max-width: 500px;
+    line-height: 1.4;
+    border-left: 3px solid var(--orange);
+    padding-left: 20px;
+  }
+
+  .hero-location {
+    text-align: right;
+    font-family: var(--font-cond);
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-cond);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+  .hero-scroll::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--orange), transparent);
+    animation: scrollPulse 2s 1.5s infinite;
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-section {
+    background: var(--orange);
+    padding: 14px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--dark);
+    padding: 0 40px;
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    font-size: 10px;
+    vertical-align: middle;
+    padding: 0 20px;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 100px 48px; }
+
+  .section-label {
+    font-family: var(--font-cond);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 8vw, 96px);
+    line-height: 0.92;
+    color: var(--cream);
+    margin-bottom: 48px;
+  }
+
+  /* ── ABOUT ── */
+  .about { background: var(--dark2); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    max-width: 1200px;
+  }
+
+  .about-text {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--cream2);
+    font-weight: 400;
+  }
+  .about-text p + p { margin-top: 20px; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .stat-box {
+    background: var(--dark3);
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--orange);
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* ── PACKAGES ── */
+  .packages { background: var(--dark); }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1200px;
+    margin-top: 0;
+  }
+
+  .pkg-card {
+    background: var(--dark3);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, background 0.3s;
+  }
+  .pkg-card:hover { transform: translateY(-6px); background: #222; }
+
+  .pkg-card.featured {
+    background: var(--orange);
+  }
+  .pkg-card.featured .pkg-price,
+  .pkg-card.featured .pkg-name,
+  .pkg-card.featured .pkg-sessions,
+  .pkg-card.featured .pkg-desc,
+  .pkg-card.featured .pkg-feature { color: var(--dark); }
+  .pkg-card.featured .pkg-feature::before { background: var(--dark); }
+  .pkg-card.featured .pkg-cta {
+    background: var(--dark);
+    color: var(--orange);
+  }
+  .pkg-card.featured .pkg-badge { display: block; }
+  .pkg-card.featured:hover { background: #d94f34; }
+
+  .pkg-badge {
+    display: none;
+    font-family: var(--font-cond);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--dark);
+    color: var(--orange);
+    padding: 4px 12px;
+    margin-bottom: 24px;
+    width: fit-content;
+  }
+
+  .pkg-name {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pkg-sessions {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 32px;
+  }
+  .pkg-price {
+    font-family: var(--font-display);
+    font-size: 80px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pkg-price sup {
+    font-size: 32px;
+    vertical-align: top;
+    margin-top: 16px;
+    display: inline-block;
+  }
+  .pkg-per {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--gray);
+    margin-bottom: 36px;
+  }
+  .pkg-card.featured .pkg-per { color: rgba(13,13,13,0.6); }
+
+  .pkg-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin-bottom: 28px;
+  }
+  .pkg-card.featured .pkg-divider { background: rgba(0,0,0,0.15); }
+
+  .pkg-feature {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--cream2);
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+  }
+  .pkg-feature::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 2px;
+    background: var(--orange);
+  }
+  .pkg-feature.off { opacity: 0.35; }
+  .pkg-feature.off::before { background: var(--gray); }
+
+  .pkg-desc {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--gray);
+    margin-top: 24px;
+    line-height: 1.5;
+  }
+
+  .pkg-cta {
+    display: block;
+    margin-top: 32px;
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--orange);
+    border: none;
+    padding: 14px 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .pkg-cta:hover { background: var(--orange-light); }
+
+  /* ── AGE GROUPS ── */
+  .ages { background: var(--dark2); }
+
+  .ages-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 2px;
+    max-width: 1200px;
+  }
+  .age-tab {
+    flex: 1;
+    padding: 20px;
+    background: var(--dark3);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .age-tab span {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .age-tab:hover { background: #222; color: var(--cream); }
+  .age-tab.active { background: var(--orange); color: var(--dark); }
+  .age-tab.active span { color: var(--dark); }
+
+  .age-panels { max-width: 1200px; }
+
+  .age-panel {
+    display: none;
+    background: var(--dark3);
+    padding: 48px;
+  }
+  .age-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .panel-sub {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 24px;
+  }
+  .panel-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--cream2);
+    margin-bottom: 32px;
+  }
+
+  .session-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .session-time {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--orange);
+    min-width: 52px;
+    padding-top: 2px;
+  }
+  .session-info strong {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--cream);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .session-info small {
+    font-size: 13px;
+    color: var(--gray);
+  }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .focus-item {
+    background: var(--dark2);
+    padding: 20px;
+  }
+  .focus-week {
+    font-family: var(--font-cond);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .focus-label {
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+
+  /* ── 3ON3 ── */
+  .league { background: var(--dark); overflow: hidden; position: relative; }
+
+  .league-bg {
+    position: absolute;
+    right: -100px; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: 400px;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(232,89,60,0.08);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .league-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .league-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 40px;
+  }
+  .rule-item {
+    background: var(--dark3);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .rule-num {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--orange);
+    min-width: 40px;
+    opacity: 0.5;
+  }
+  .rule-text {
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--cream);
+  }
+  .rule-sub {
+    font-size: 13px;
+    color: var(--gray);
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    letter-spacing: 0;
+  }
+
+  .league-visual {
+    position: relative;
+  }
+  .court-diagram {
+    width: 100%;
+    max-width: 400px;
+    opacity: 0.9;
+  }
+
+  .entry-box {
+    background: var(--orange);
+    padding: 36px;
+    margin-top: 40px;
+  }
+  .entry-title {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--dark);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .entry-sub {
+    font-family: var(--font-cond);
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: rgba(13,13,13,0.7);
+  }
+
+  /* ── CONTACT ── */
+  .contact { background: var(--dark2); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    max-width: 1200px;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label {
+    font-family: var(--font-cond);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .form-input {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--cream);
+    padding: 14px 18px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--orange); }
+  .form-input::placeholder { color: rgba(255,255,255,0.2); }
+
+  select.form-input option { background: var(--dark3); }
+
+  .form-btn {
+    background: var(--orange);
+    color: var(--dark);
+    border: none;
+    padding: 16px 32px;
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    align-self: flex-start;
+    margin-top: 8px;
+  }
+  .form-btn:hover { background: var(--orange-light); }
+
+  .contact-info { padding-top: 8px; }
+  .contact-item {
+    margin-bottom: 32px;
+  }
+  .contact-item-label {
+    font-family: var(--font-cond);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .contact-item-val {
+    font-family: var(--font-cond);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 1px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--orange);
+    letter-spacing: 2px;
+  }
+  .footer-logo span { color: rgba(255,255,255,0.3); }
+  .footer-copy {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(0.6); }
+    50%       { opacity: 1;   transform: scaleY(1); }
+  }
+
+  /* reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 72px 24px; }
+    .hero { padding: 100px 24px 72px; }
+    .hero-title { font-size: clamp(72px, 20vw, 140px); }
+    .hero-subtitle-row { flex-direction: column; gap: 24px; align-items: flex-start; }
+    .about-grid, .packages-grid, .league-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .age-panel.active { grid-template-columns: 1fr; gap: 32px; }
+    .ages-tabs { flex-direction: column; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">ΜΠΕΙ <span>ΔΕ</span> ΜΠΕΙ</a>
+  <ul class="nav-links">
+    <li><a href="#about">Φιλοσοφία</a></li>
+    <li><a href="#packages">Πακέτα</a></li>
+    <li><a href="#ages">Ηλικίες</a></li>
+    <li><a href="#league">3on3</a></li>
+    <li><a href="#contact">Επικοινωνία</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Ξεκίνα Τώρα</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <svg class="hero-court" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <rect x="80" y="60" width="1040" height="580" stroke="white" stroke-width="2"/>
+    <circle cx="600" cy="350" r="120" stroke="white" stroke-width="2"/>
+    <line x1="600" y1="60" x2="600" y2="640" stroke="white" stroke-width="2"/>
+    <rect x="80" y="185" width="240" height="330" stroke="white" stroke-width="2"/>
+    <rect x="880" y="185" width="240" height="330" stroke="white" stroke-width="2"/>
+    <circle cx="600" cy="350" r="10" fill="white"/>
+    <path d="M 80 290 A 150 150 0 0 1 80 410" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M 1120 290 A 150 150 0 0 0 1120 410" stroke="white" stroke-width="2" fill="none"/>
+    <circle cx="200" cy="350" r="60" stroke="white" stroke-width="2"/>
+    <circle cx="1000" cy="350" r="60" stroke="white" stroke-width="2"/>
+  </svg>
+
+  <p class="hero-eyebrow">Basketball Academy · Περιστέρι, Αθήνα</p>
+
+  <h1 class="hero-title">
+    ΜΠΕΙ<br>
+    <span class="stroke">ΔΕ</span><br>
+    ΜΠΕΙ
+  </h1>
+
+  <div class="hero-subtitle-row">
+    <p class="hero-tagline">
+      «Παίζεις μπάσκετ;<br>Κάνε μπει δε μπει.»
+    </p>
+    <div class="hero-location">
+      Ανοικτό Γήπεδο<br>
+      Περιστέρι<br>
+      Αθήνα
+    </div>
+  </div>
+
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <!-- duplicated for seamless loop -->
+    <span class="marquee-item">FUNDAMENTALS</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">OLDSCHOOL MENTALITY</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">ΑΤΟΜΙΚΗ ΠΡΟΠΟΝΗΣΗ</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">3on3 LEAGUE</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">VIDEO ANALYSIS</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">ΠΕΡΙΣΤΕΡΙ</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">FUNDAMENTALS</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">OLDSCHOOL MENTALITY</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">ΑΤΟΜΙΚΗ ΠΡΟΠΟΝΗΣΗ</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">3on3 LEAGUE</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">VIDEO ANALYSIS</span><span class="marquee-dot">●</span>
+    <span class="marquee-item">ΠΕΡΙΣΤΕΡΙ</span><span class="marquee-dot">●</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <p class="section-label reveal">Φιλοσοφία</p>
+  <h2 class="section-title reveal reveal-delay-1">ΓΙΑΤΙ<br>ΥΠΑΡΧΟΥΜΕ</h2>
+  <div class="about-grid">
+    <div class="about-text reveal reveal-delay-2">
+      <p>Η Μπει Δε Μπει Basketball Academy δεν είναι απλώς ένα γήπεδο με μπάλες. Είναι μια φιλοσοφία: το μπάσκετ διδάσκεται καλύτερα από την αρχή, με σωστά fundamentals, πειθαρχία και αγάπη για το παιχνίδι.</p>
+      <p>Το «μπει δε μπει» είναι η πιο honest διαδικασία που υπάρχει στο μπάσκετ. Σουτάρεις. Αν μπει, παίρνεις την μπάλα. Αλλιώς την παίρνει ο αντίπαλος. Απλό, δίκαιο, ανταγωνιστικό — ακριβώς όπως πρέπει να είναι η προπόνηση.</p>
+      <p>Ο προπονητής μας έχει χρόνια εμπειρία στη διδασκαλία του αθλήματος σε όλες τις ηλικίες και πιστεύει ότι κάθε αθλητής — από το 12χρονο που κρατά μπάλα για πρώτη φορά μέχρι τον 40άρη που θέλει να ξαναβρεί τον εαυτό του στο παιχνίδι — αξίζει προσωπική προσοχή.</p>
+    </div>
+    <div class="about-stats reveal reveal-delay-3">
+      <div class="stat-box">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Ηλικιακές Ομάδες</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Πακέτα Προπόνησης</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">1on1</div>
+        <div class="stat-label">Ατομική Προσοχή</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3on3</div>
+        <div class="stat-label">Μόνιμο Πρωτάθλημα</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="packages" id="packages">
+  <p class="section-label reveal">Πακέτα</p>
+  <h2 class="section-title reveal reveal-delay-1">ΕΠΕΛΕΞΕ<br>ΤΟ ΠΛΑΝΟ ΣΟΥ</h2>
+  <div class="packages-grid">
+
+    <div class="pkg-card reveal">
+      <div class="pkg-name">STARTER</div>
+      <div class="pkg-sessions">4 Ατομικές / Μήνα</div>
+      <div class="pkg-price"><sup>€</sup>150</div>
+      <div class="pkg-per">ανά μήνα · ανά αθλητή</div>
+      <div class="pkg-divider"></div>
+      <div class="pkg-feature">4 προπονήσεις 60 λεπτών</div>
+      <div class="pkg-feature">Αξιολόγηση τεχνικής</div>
+      <div class="pkg-feature">Εξατομικευμένο πλάνο</div>
+      <div class="pkg-feature">Μηνιαίο progress report</div>
+      <div class="pkg-feature off">Video Analysis</div>
+      <div class="pkg-feature off">Mentoring</div>
+      <div class="pkg-desc">Ιδανικό για αρχάριους και casual παίκτες που θέλουν να χτίσουν βάση.</div>
+      <a href="#contact" class="pkg-cta">Ξεκίνα Starter</a>
+    </div>
+
+    <div class="pkg-card featured reveal reveal-delay-1">
+      <div class="pkg-badge">Πιο Δημοφιλές</div>
+      <div class="pkg-name">PREMIUM</div>
+      <div class="pkg-sessions">8 Ατομικές / Μήνα</div>
+      <div class="pkg-price"><sup>€</sup>300</div>
+      <div class="pkg-per">ανά μήνα · ανά αθλητή</div>
+      <div class="pkg-divider"></div>
+      <div class="pkg-feature">8 προπονήσεις 60 λεπτών</div>
+      <div class="pkg-feature">Αξιολόγηση τεχνικής</div>
+      <div class="pkg-feature">Εξατομικευμένο πλάνο</div>
+      <div class="pkg-feature">Μηνιαίο progress report</div>
+      <div class="pkg-feature">Video Analysis (2x/μήνα)</div>
+      <div class="pkg-feature off">Mentoring</div>
+      <div class="pkg-desc">Για αγωνιστικούς αθλητές που θέλουν να βλέπουν και να καταλαβαίνουν την πρόοδό τους.</div>
+      <a href="#contact" class="pkg-cta">Ξεκίνα Premium</a>
+    </div>
+
+    <div class="pkg-card reveal reveal-delay-2">
+      <div class="pkg-name">ELITE</div>
+      <div class="pkg-sessions">16 Ατομικές / Μήνα</div>
+      <div class="pkg-price"><sup>€</sup>550</div>
+      <div class="pkg-per">ανά μήνα · ανά αθλητή</div>
+      <div class="pkg-divider"></div>
+      <div class="pkg-feature">16 προπονήσεις 60 λεπτών</div>
+      <div class="pkg-feature">Αξιολόγηση τεχνικής</div>
+      <div class="pkg-feature">Εξατομικευμένο πλάνο</div>
+      <div class="pkg-feature">Εβδομαδιαίο progress report</div>
+      <div class="pkg-feature">Video Analysis (κάθε session)</div>
+      <div class="pkg-feature">1-on-1 Mentoring</div>
+      <div class="pkg-desc">Για αθλητές που θέλουν το επόμενο επίπεδο. Σχεδόν καθημερινή δουλειά.</div>
+      <a href="#contact" class="pkg-cta">Ξεκίνα Elite</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- AGE GROUPS -->
+<section class="ages" id="ages">
+  <p class="section-label reveal">Πρόγραμμα</p>
+  <h2 class="section-title reveal reveal-delay-1">ΓΙΑ ΚΑΘΕ<br>ΗΛΙΚΙΑ</h2>
+
+  <div class="ages-tabs reveal reveal-delay-2">
+    <button class="age-tab active" onclick="showAge('a1214')">
+      <span>12–14</span>Παίδες / Κορασίδες
+    </button>
+    <button class="age-tab" onclick="showAge('a1417')">
+      <span>14–17</span>Έφηβοι
+    </button>
+    <button class="age-tab" onclick="showAge('a18')">
+      <span>18+</span>Adults / Advanced
+    </button>
+  </div>
+
+  <div class="age-panels reveal reveal-delay-3">
+
+    <div class="age-panel active" id="a1214">
+      <div>
+        <div class="panel-title">Παίδες</div>
+        <div class="panel-sub">12–14 ετών · Fundamentals Core</div>
+        <p class="panel-desc">Κρίσιμη ηλικία για θεμελίωση. Χτίζουμε τη βάση — ball handling, shooting form, footwork — με τρόπο που να μένει για πάντα. Η διασκέδαση είναι μέρος της δουλειάς.</p>
+        <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Dynamic Warm-up</strong><small>Σκοινάκι, lateral shuffles, arm circles</small></div></div>
+        <div class="session-row"><div class="session-time">8–20'</div><div class="session-info"><strong>Ball Handling</strong><small>Figure-8, between legs, speed dribble</small></div></div>
+        <div class="session-row"><div class="session-time">20–35'</div><div class="session-info"><strong>Shooting Form</strong><small>Catch & shoot κοντά, form shooting, layups</small></div></div>
+        <div class="session-row"><div class="session-time">35–50'</div><div class="session-info"><strong>Footwork & Moves</strong><small>Triple threat, jab step, pivot, drop step</small></div></div>
+        <div class="session-row"><div class="session-time">50–58'</div><div class="session-info"><strong>1-on-1 Drill</strong><small>Competitive drill με κανόνες</small></div></div>
+        <div class="session-row"><div class="session-time">58–60'</div><div class="session-info"><strong>Recap</strong><small>Stretching, αξιολόγηση, feedback</small></div></div>
+      </div>
+      <div>
+        <div class="panel-sub" style="margin-top:0">Μηνιαίο Πλάνο</div>
+        <div class="focus-grid">
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 1</div><div class="focus-label">Ball Handling & Layups</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 2</div><div class="focus-label">Shooting Form</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 3</div><div class="focus-label">Footwork & Pivots</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 4</div><div class="focus-label">Game Drills & Αξιολόγηση</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="age-panel" id="a1417">
+      <div>
+        <div class="panel-title">Έφηβοι</div>
+        <div class="panel-sub">14–17 ετών · Σημεία & Τακτική</div>
+        <p class="panel-desc">Η φάση όπου χτίζεται ο αθλητής. Σωματική δύναμη, αγωνιστική νοοτροπία, κατανόηση τακτικής. Από fundamentals σε σημεία και αγωνιστική εφαρμογή.</p>
+        <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Athletic Warm-up</strong><small>Plyometrics, defensive slides, sprint drills</small></div></div>
+        <div class="session-row"><div class="session-time">8–22'</div><div class="session-info"><strong>Shooting Workout</strong><small>Pull-up jumper, mid-range, off screens</small></div></div>
+        <div class="session-row"><div class="session-time">22–38'</div><div class="session-info"><strong>Skill Focus</strong><small>Handles / Post moves / Perimeter moves (εναλλάξ)</small></div></div>
+        <div class="session-row"><div class="session-time">38–52'</div><div class="session-info"><strong>Competitive Drills</strong><small>3-man weave, 2-on-1, shell defense</small></div></div>
+        <div class="session-row"><div class="session-time">52–58'</div><div class="session-info"><strong>Conditioning</strong><small>Suicides ή spot shooting under fatigue</small></div></div>
+        <div class="session-row"><div class="session-time">58–60'</div><div class="session-info"><strong>Mental Recap</strong><small>Τι πήγε καλά, τι δουλεύουμε αύριο</small></div></div>
+      </div>
+      <div>
+        <div class="panel-sub" style="margin-top:0">Μηνιαίο Πλάνο</div>
+        <div class="focus-grid">
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 1</div><div class="focus-label">Shooting off Movement</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 2</div><div class="focus-label">Ball Handling Advanced</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 3</div><div class="focus-label">Post & Perimeter Moves</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 4</div><div class="focus-label">Game Situations</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="age-panel" id="a18">
+      <div>
+        <div class="panel-title">Adults</div>
+        <div class="panel-sub">18+ · Advanced & Individual</div>
+        <p class="panel-desc">Παίκτες που γνωρίζουν το παιχνίδι και θέλουν να βελτιωθούν σε συγκεκριμένα σημεία ή να επιστρέψουν σε υψηλό επίπεδο. Λιγότερο παιχνίδι — περισσότερο γιατί.</p>
+        <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Targeted Warm-up</strong><small>Βασισμένο στο σημείο της ημέρας</small></div></div>
+        <div class="session-row"><div class="session-time">8–25'</div><div class="session-info"><strong>Primary Skill Block</strong><small>Deep work σε 1 συγκεκριμένο σημείο</small></div></div>
+        <div class="session-row"><div class="session-time">25–42'</div><div class="session-info"><strong>Secondary Skill Block</strong><small>Combination moves ή αντίθετο σημείο</small></div></div>
+        <div class="session-row"><div class="session-time">42–54'</div><div class="session-info"><strong>Game Speed Application</strong><small>Drills με defense pressure, fatigue</small></div></div>
+        <div class="session-row"><div class="session-time">54–58'</div><div class="session-info"><strong>Conditioning</strong><small>Core work, jump training, agility</small></div></div>
+        <div class="session-row"><div class="session-time">58–60'</div><div class="session-info"><strong>Strategy Talk</strong><small>Πώς εφαρμόζεται στον αγώνα</small></div></div>
+      </div>
+      <div>
+        <div class="panel-sub" style="margin-top:0">Μηνιαίο Πλάνο</div>
+        <div class="focus-grid">
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 1</div><div class="focus-label">Signature Move Building</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 2</div><div class="focus-label">Weakness Attack</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 3</div><div class="focus-label">Off-ball Movement</div></div>
+          <div class="focus-item"><div class="focus-week">Εβδομάδα 4</div><div class="focus-label">Full Game Integration</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 3ON3 LEAGUE -->
+<section class="league" id="league">
+  <div class="league-bg">3on3</div>
+  <div class="league-grid">
+    <div>
+      <p class="section-label reveal">Πρωτάθλημα</p>
+      <h2 class="section-title reveal reveal-delay-1" style="font-size: clamp(52px, 7vw, 88px)">ΜΠΕΙ ΔΕ<br>ΜΠΕΙ LEAGUE</h2>
+      <p class="about-text reveal reveal-delay-2" style="margin-bottom: 32px;">Μόνιμο 3on3 πρωτάθλημα για ενήλικες — κάθε Σαββατοκύριακο στο γήπεδό μας. Κάτι που δεν υπάρχει πουθενά αλλού σε μόνιμη βάση στη δυτική Αθήνα.</p>
+
+      <div class="league-rules reveal reveal-delay-2">
+        <div class="rule-item">
+          <div class="rule-num">01</div>
+          <div class="rule-text">Round-robin + Playoffs<span class="rule-sub">4-6 ομάδες ανά season, κάθε ομάδα παίζει με όλες</span></div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-num">02</div>
+          <div class="rule-text">Στα 21 ή 12 λεπτά<span class="rule-sub">Κλασικό street rules, check ball, self-officiated</span></div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-num">03</div>
+          <div class="rule-text">3+1 παίκτες/ομάδα<span class="rule-sub">3 βασικοί + 1 εφεδρικός, όλα τα επίπεδα</span></div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-num">04</div>
+          <div class="rule-text">Live Leaderboard<span class="rule-sub">Ανανεώνεται online & social media μετά κάθε αγωνιστική</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="league-visual reveal reveal-delay-2">
+      <svg class="court-diagram" viewBox="0 0 360 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="340" height="300" rx="4" stroke="rgba(232,89,60,0.3)" stroke-width="1.5"/>
+        <rect x="10" y="10" width="180" height="300" rx="4" stroke="rgba(232,89,60,0.5)" stroke-width="2"/>
+        <rect x="10" y="95" width="120" height="130" stroke="rgba(232,89,60,0.5)" stroke-width="1.5"/>
+        <circle cx="130" cy="160" r="50" stroke="rgba(232,89,60,0.3)" stroke-width="1.5"/>
+        <circle cx="190" cy="160" r="6" fill="rgba(232,89,60,0.4)"/>
+        <path d="M 10 120 A 60 60 0 0 1 10 200" stroke="rgba(232,89,60,0.5)" stroke-width="1.5"/>
+        <!-- ball -->
+        <circle cx="100" cy="120" r="18" stroke="#E8593C" stroke-width="2"/>
+        <path d="M 82 120 Q 100 105 118 120" stroke="#E8593C" stroke-width="1.5" fill="none"/>
+        <path d="M 82 120 Q 100 135 118 120" stroke="#E8593C" stroke-width="1.5" fill="none"/>
+        <line x1="100" y1="102" x2="100" y2="138" stroke="#E8593C" stroke-width="1.5"/>
+        <!-- players -->
+        <circle cx="80" cy="200" r="12" fill="rgba(232,89,60,0.8)"/>
+        <circle cx="130" cy="230" r="12" fill="rgba(232,89,60,0.8)"/>
+        <circle cx="60" cy="140" r="12" fill="rgba(232,89,60,0.8)"/>
+        <circle cx="150" cy="160" r="12" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <circle cx="170" cy="100" r="12" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <circle cx="140" cy="80" r="12" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <!-- hoop -->
+        <rect x="4" y="150" width="12" height="4" rx="1" fill="#E8593C"/>
+        <circle cx="22" cy="152" r="8" stroke="#E8593C" stroke-width="2"/>
+      </svg>
+
+      <div class="entry-box reveal reveal-delay-3">
+        <div class="entry-title">8€<br>ανά παίκτη</div>
+        <div class="entry-sub">= 24-32€ ανά ομάδα ανά αγωνιστική · Τρόπαια & medals για τους νικητές</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <p class="section-label reveal">Επικοινωνία</p>
+  <h2 class="section-title reveal reveal-delay-1">ΞΕΚΙΝΑ<br>ΣΗΜΕΡΑ</h2>
+  <div class="contact-grid">
+    <form class="contact-form reveal reveal-delay-2" onsubmit="handleForm(event)">
+      <div class="form-group">
+        <label class="form-label">Όνομα</label>
+        <input class="form-input" type="text" placeholder="Το όνομά σου" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Τηλέφωνο</label>
+        <input class="form-input" type="tel" placeholder="69X XXX XXXX" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ηλικία Αθλητή</label>
+        <input class="form-input" type="text" placeholder="π.χ. 14 ετών">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ενδιαφέρον</label>
+        <select class="form-input">
+          <option value="">Επέλεξε...</option>
+          <option>Starter — 150€/μήνα</option>
+          <option>Premium — 300€/μήνα</option>
+          <option>Elite — 550€/μήνα</option>
+          <option>3on3 League</option>
+          <option>Θέλω να μάθω περισσότερα</option>
+        </select>
+      </div>
+      <button type="submit" class="form-btn">Στείλε Μήνυμα →</button>
+      <div id="form-success" style="display:none; color: var(--orange); font-family: var(--font-cond); font-size:14px; letter-spacing:2px; text-transform:uppercase; margin-top:8px;">
+        ✓ Μήνυμα στάλθηκε! Θα επικοινωνήσουμε σύντομα.
+      </div>
+    </form>
+
+    <div class="contact-info reveal reveal-delay-3">
+      <div class="contact-item">
+        <div class="contact-item-label">Τοποθεσία</div>
+        <div class="contact-item-val">Ανοικτό Γήπεδο<br>Περιστέρι, Αθήνα</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Instagram</div>
+        <div class="contact-item-val">@mpeidempeiacademy</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Ωράριο</div>
+        <div class="contact-item-val">Δευ–Σαβ<br>Κατόπιν Συνεννόησης</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">3on3 League</div>
+        <div class="contact-item-val">Κάθε Σαββατοκύριακο</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ΜΠΕΙ <span>ΔΕ</span> ΜΠΕΙ</div>
+  <div class="footer-copy">© 2025 Μπει Δε Μπει Basketball Academy · Περιστέρι</div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Age tabs
+  function showAge(id) {
+    document.querySelectorAll('.age-tab').forEach((t, i) => {
+      t.classList.toggle('active', ['a1214','a1417','a18'][i] === id);
+    });
+    document.querySelectorAll('.age-panel').forEach(p => {
+      p.classList.toggle('active', p.id === id);
+    });
+  }
+
+  // Form
+  function handleForm(e) {
+    e.preventDefault();
+    document.getElementById('form-success').style.display = 'block';
+    e.target.reset();
+  }
+</script>
+</body>
+</html>
