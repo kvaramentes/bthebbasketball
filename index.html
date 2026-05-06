@@ -22,7 +22,7 @@
   --font-body: 'Barlow', sans-serif;
 }
 html { scroll-behavior: smooth; }
-body { background: var(--dark); color: var(--cream); font-family: var(--font-body); overflow-x: hidden; }
+body { background: var(--dark); color: var(--cream); font-family: var(--font-body); overflow-x: hidden; text-align: justify; }
 body::before {
   content: '';
   position: fixed; inset: 0;
@@ -38,25 +38,27 @@ nav {
   background: linear-gradient(to bottom, rgba(13,13,13,0.95), transparent);
   transition: background 0.3s;
 }
-nav.scrolled { background: rgba(13,13,13,0.97); }
-.nav-logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 3px; color: var(--orange); text-decoration: none; }
+nav { text-align: left; }
+.hero-title, .section-title, .panel-title, .stat-num, .pkg-name, .pkg-price, .footer-logo, .footer-copy, .nav-logo, .hero-eyebrow, .hero-location, .age-tab, .pkg-cta, .form-btn, .league-nav-btn, .entry-title, .rule-num, .rule-text { text-align: left; }
+.footer-copy { text-align: right; }
+.nav-logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 3px; color: var(--orange); text-decoration: none;  }
 .nav-logo span { color: var(--cream); }
 .nav-links { display: flex; gap: 36px; list-style: none; }
-.nav-links a { font-family: var(--font-cond); font-size: 14px; font-weight: 600; letter-spacing: 2px; color: var(--cream); text-decoration: none; opacity: 0.7; transition: opacity 0.2s, color 0.2s; }
+.nav-links a { font-family: var(--font-cond); font-size: 14px; font-weight: 600; letter-spacing: 2px;  color: var(--cream); text-decoration: none; opacity: 0.7; transition: opacity 0.2s, color 0.2s; }
 .nav-links a:hover { opacity: 1; color: var(--orange); }
-.nav-cta { font-family: var(--font-cond); font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--dark); background: var(--orange); border: none; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.1s; }
+.nav-cta { font-family: var(--font-cond); font-size: 13px; font-weight: 700; letter-spacing: 2px;  color: var(--dark); background: var(--orange); border: none; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.1s; }
 .nav-cta:hover { background: var(--orange-light); transform: translateY(-1px); }
 
 /* HERO */
 .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 48px 80px; position: relative; overflow: hidden; }
 .hero-court { position: absolute; inset: 0; opacity: 0.06; }
-.hero-eyebrow { font-family: var(--font-cond); font-size: 13px; font-weight: 600; letter-spacing: 5px; color: var(--orange); margin-bottom: 24px; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+.hero-eyebrow { font-family: var(--font-cond); font-size: 13px; font-weight: 600; letter-spacing: 5px;  color: var(--orange); margin-bottom: 24px; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
 .hero-title { font-family: var(--font-display); font-size: clamp(96px, 18vw, 220px); line-height: 0.88; color: var(--cream); opacity: 0; animation: fadeUp 0.9s 0.35s forwards; }
 .hero-title .stroke { -webkit-text-stroke: 2px var(--orange); color: transparent; }
 .hero-subtitle-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 40px; opacity: 0; animation: fadeUp 0.9s 0.55s forwards; }
 .hero-tagline { font-family: var(--font-cond); font-size: clamp(18px, 3vw, 28px); font-weight: 400; font-style: italic; color: var(--cream2); max-width: 500px; line-height: 1.4; border-left: 3px solid var(--orange); padding-left: 20px; }
-.hero-location { text-align: right; font-family: var(--font-cond); font-size: 14px; letter-spacing: 3px; color: var(--gray); }
-.hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--font-cond); font-size: 11px; letter-spacing: 3px; color: var(--gray); opacity: 0; animation: fadeIn 1s 1.2s forwards; }
+.hero-location { text-align: right; font-family: var(--font-cond); font-size: 14px; letter-spacing: 2px; color: var(--gray); }
+.hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--font-cond); font-size: 11px; letter-spacing: 3px;  color: var(--gray); opacity: 0; animation: fadeIn 1s 1.2s forwards; }
 .hero-scroll::after { content: ''; width: 1px; height: 40px; background: linear-gradient(to bottom, var(--orange), transparent); animation: scrollPulse 2s 1.5s infinite; }
 
 /* MARQUEE */
@@ -67,8 +69,8 @@ nav.scrolled { background: rgba(13,13,13,0.97); }
 
 /* SECTIONS */
 section { padding: 100px 48px; }
-.section-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; letter-spacing: 5px; color: var(--orange); margin-bottom: 16px; }
-.section-title { font-family: var(--font-display); font-size: clamp(52px, 8vw, 96px); line-height: 0.92; color: var(--cream); margin-bottom: 48px; }
+.section-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; letter-spacing: 5px;  color: var(--orange); margin-bottom: 16px; }
+.section-title { font-family: var(--font-display); font-size: clamp(52px, 8vw, 96px); line-height: 0.92; color: var(--cream); margin-bottom: 48px;  }
 
 /* ABOUT */
 .about { background: var(--dark2); }
@@ -79,7 +81,7 @@ section { padding: 100px 48px; }
 .stat-box { background: var(--dark3); padding: 36px 28px; position: relative; overflow: hidden; }
 .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--orange); }
 .stat-num { font-family: var(--font-display); font-size: 64px; color: var(--orange); line-height: 1; margin-bottom: 6px; }
-.stat-label { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px; color: var(--gray); }
+.stat-label { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px;  color: var(--gray); }
 
 /* PACKAGES */
 .packages { background: var(--dark); }
@@ -93,9 +95,9 @@ section { padding: 100px 48px; }
 .pkg-card.featured .pkg-cta { background: var(--dark); color: var(--orange); }
 .pkg-card.featured .pkg-badge { display: block; }
 .pkg-card.featured:hover { background: #d94f34; }
-.pkg-badge { display: none; font-family: var(--font-cond); font-size: 11px; font-weight: 700; letter-spacing: 3px; background: var(--dark); color: var(--orange); padding: 4px 12px; margin-bottom: 24px; width: fit-content; }
+.pkg-badge { display: none; font-family: var(--font-cond); font-size: 11px; font-weight: 700; letter-spacing: 3px;  background: var(--dark); color: var(--orange); padding: 4px 12px; margin-bottom: 24px; width: fit-content; }
 .pkg-name { font-family: var(--font-display); font-size: 48px; color: var(--cream); line-height: 1; margin-bottom: 4px; }
-.pkg-sessions { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px; color: var(--gray); margin-bottom: 32px; }
+.pkg-sessions { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px;  color: var(--gray); margin-bottom: 32px; }
 .pkg-price { font-family: var(--font-display); font-size: 80px; color: var(--cream); line-height: 1; margin-bottom: 4px; }
 .pkg-price sup { font-size: 32px; vertical-align: top; margin-top: 16px; display: inline-block; }
 .pkg-per { font-family: var(--font-cond); font-size: 13px; color: var(--gray); margin-bottom: 36px; }
@@ -107,13 +109,13 @@ section { padding: 100px 48px; }
 .pkg-feature.off { opacity: 0.35; }
 .pkg-feature.off::before { background: var(--gray); }
 .pkg-desc { font-family: var(--font-cond); font-size: 13px; letter-spacing: 1px; color: var(--gray); margin-top: 24px; line-height: 1.5; }
-.pkg-cta { display: block; margin-top: 32px; font-family: var(--font-cond); font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--dark); background: var(--orange); border: none; padding: 14px 24px; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.2s; }
+.pkg-cta { display: block; margin-top: 32px; font-family: var(--font-cond); font-size: 13px; font-weight: 700; letter-spacing: 2px;  color: var(--dark); background: var(--orange); border: none; padding: 14px 24px; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.2s; }
 .pkg-cta:hover { background: var(--orange-light); }
 
 /* AGES */
 .ages { background: var(--dark2); }
 .ages-tabs { display: flex; gap: 2px; margin-bottom: 2px; max-width: 1200px; }
-.age-tab { flex: 1; padding: 20px; background: var(--dark3); border: none; cursor: pointer; font-family: var(--font-cond); font-size: 15px; font-weight: 600; letter-spacing: 2px; color: var(--gray); transition: all 0.2s; text-align: left; }
+.age-tab { flex: 1; padding: 20px; background: var(--dark3); border: none; cursor: pointer; font-family: var(--font-cond); font-size: 15px; font-weight: 600; letter-spacing: 2px;  color: var(--gray); transition: all 0.2s; text-align: left; }
 .age-tab span { display: block; font-family: var(--font-display); font-size: 36px; color: var(--cream); line-height: 1; margin-bottom: 4px; }
 .age-tab:hover { background: #222; color: var(--cream); }
 .age-tab.active { background: var(--orange); color: var(--dark); }
@@ -122,15 +124,15 @@ section { padding: 100px 48px; }
 .age-panel { display: none; background: var(--dark3); padding: 48px; }
 .age-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
 .panel-title { font-family: var(--font-display); font-size: 48px; color: var(--cream); margin-bottom: 8px; }
-.panel-sub { font-family: var(--font-cond); font-size: 13px; letter-spacing: 3px; color: var(--orange); margin-bottom: 24px; }
+.panel-sub { font-family: var(--font-cond); font-size: 13px; letter-spacing: 3px;  color: var(--orange); margin-bottom: 24px; }
 .panel-desc { font-size: 16px; line-height: 1.7; color: var(--cream2); margin-bottom: 32px; }
 .session-row { display: flex; gap: 16px; margin-bottom: 14px; align-items: flex-start; }
 .session-time { font-family: var(--font-cond); font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--orange); min-width: 52px; padding-top: 2px; }
-.session-info strong { font-family: var(--font-cond); font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--cream); display: block; margin-bottom: 2px; }
+.session-info strong { font-family: var(--font-cond); font-size: 14px; font-weight: 600; letter-spacing: 1px;  color: var(--cream); display: block; margin-bottom: 2px; }
 .session-info small { font-size: 13px; color: var(--gray); }
 .focus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
 .focus-item { background: var(--dark2); padding: 20px; }
-.focus-week { font-family: var(--font-cond); font-size: 11px; letter-spacing: 3px; color: var(--orange); margin-bottom: 8px; }
+.focus-week { font-family: var(--font-cond); font-size: 11px; letter-spacing: 3px;  color: var(--orange); margin-bottom: 8px; }
 .focus-label { font-family: var(--font-cond); font-size: 16px; font-weight: 600; color: var(--cream); line-height: 1.3; }
 
 /* 3ON3 LEAGUE */
@@ -150,7 +152,7 @@ section { padding: 100px 48px; }
 .league-extended { background: var(--dark2); display: none; }
 .league-extended.open { display: block; }
 .league-nav { display: flex; gap: 2px; max-width: 1200px; margin-bottom: 2px; }
-.league-nav-btn { flex: 1; background: var(--dark3); border: none; padding: 16px 20px; font-family: var(--font-cond); font-size: 14px; font-weight: 600; letter-spacing: 2px; color: var(--gray); cursor: pointer; transition: all 0.2s; }
+.league-nav-btn { flex: 1; background: var(--dark3); border: none; padding: 16px 20px; font-family: var(--font-cond); font-size: 14px; font-weight: 600; letter-spacing: 2px;  color: var(--gray); cursor: pointer; transition: all 0.2s; }
 .league-nav-btn:hover { background: #222; color: var(--cream); }
 .league-nav-btn.active { background: var(--orange); color: var(--dark); }
 .league-panel { display: none; max-width: 1200px; }
@@ -158,7 +160,7 @@ section { padding: 100px 48px; }
 
 /* Standings table */
 .standings-table { width: 100%; border-collapse: collapse; }
-.standings-table th { background: var(--dark3); font-family: var(--font-cond); font-size: 12px; letter-spacing: 3px; color: var(--orange); padding: 14px 16px; text-align: left; }
+.standings-table th { background: var(--dark3); font-family: var(--font-cond); font-size: 12px; letter-spacing: 3px;  color: var(--orange); padding: 14px 16px; text-align: left; }
 .standings-table td { padding: 14px 16px; font-family: var(--font-cond); font-size: 16px; color: var(--cream2); border-bottom: 1px solid rgba(255,255,255,0.05); }
 .standings-table tr:hover td { background: rgba(255,255,255,0.03); }
 .standings-table .rank { font-family: var(--font-display); font-size: 28px; color: var(--orange); opacity: 0.5; }
@@ -172,12 +174,12 @@ section { padding: 100px 48px; }
 /* Schedule */
 .schedule-list { display: flex; flex-direction: column; gap: 2px; max-width: 1200px; }
 .match-row { background: var(--dark3); padding: 20px 28px; display: grid; grid-template-columns: 120px 1fr auto 1fr 100px; align-items: center; gap: 20px; }
-.match-date { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px; color: var(--orange); }
+.match-date { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px;  color: var(--orange); }
 .match-team { font-family: var(--font-cond); font-size: 18px; font-weight: 600; color: var(--cream); }
 .match-team.right { text-align: right; }
 .match-vs { font-family: var(--font-display); font-size: 24px; color: var(--gray); text-align: center; }
 .match-score { font-family: var(--font-display); font-size: 24px; color: var(--orange); text-align: center; }
-.match-status { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px; text-align: right; }
+.match-status { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px;  text-align: right; }
 .status-done { color: var(--gray); }
 .status-next { color: var(--orange); background: rgba(232,89,60,0.12); padding: 4px 10px; }
 .status-live { color: #fff; background: var(--orange); padding: 4px 10px; animation: blink 1.5s infinite; }
@@ -186,11 +188,11 @@ section { padding: 100px 48px; }
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 1200px; }
 .player-card { background: var(--dark3); padding: 24px 28px; }
 .player-name { font-family: var(--font-display); font-size: 32px; color: var(--cream); line-height: 1; margin-bottom: 4px; }
-.player-team { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px; color: var(--orange); margin-bottom: 16px; }
+.player-team { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px;  color: var(--orange); margin-bottom: 16px; }
 .player-stats { display: flex; gap: 20px; }
 .pstat { text-align: center; }
 .pstat-num { font-family: var(--font-display); font-size: 36px; color: var(--cream); line-height: 1; }
-.pstat-label { font-family: var(--font-cond); font-size: 11px; letter-spacing: 2px; color: var(--gray); }
+.pstat-label { font-family: var(--font-cond); font-size: 11px; letter-spacing: 2px;  color: var(--gray); }
 
 /* Video */
 .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; max-width: 1200px; }
@@ -204,12 +206,12 @@ section { padding: 100px 48px; }
 .video-placeholder span { font-family: var(--font-display); font-size: 64px; color: rgba(232,89,60,0.2); }
 
 .add-result-box { background: var(--dark3); padding: 28px; max-width: 600px; margin-top: 32px; }
-.add-result-title { font-family: var(--font-cond); font-size: 13px; letter-spacing: 3px; color: var(--orange); margin-bottom: 20px; }
+.add-result-title { font-family: var(--font-cond); font-size: 13px; letter-spacing: 3px;  color: var(--orange); margin-bottom: 20px; }
 .add-form { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
 .add-input { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); color: var(--cream); padding: 12px 16px; font-family: var(--font-cond); font-size: 16px; font-weight: 600; width: 100%; text-align: center; outline: none; }
 .add-input:focus { border-color: var(--orange); }
 .add-vs { font-family: var(--font-display); font-size: 24px; color: var(--gray); text-align: center; }
-.add-btn { grid-column: 1/-1; background: var(--orange); border: none; color: var(--dark); font-family: var(--font-cond); font-size: 13px; font-weight: 700; letter-spacing: 2px; padding: 13px; cursor: pointer; transition: background 0.2s; }
+.add-btn { grid-column: 1/-1; background: var(--orange); border: none; color: var(--dark); font-family: var(--font-cond); font-size: 13px; font-weight: 700; letter-spacing: 2px;  padding: 13px; cursor: pointer; transition: background 0.2s; }
 .add-btn:hover { background: var(--orange-light); }
 
 /* CONTACT */
@@ -217,22 +219,22 @@ section { padding: 100px 48px; }
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; max-width: 1200px; }
 .contact-form { display: flex; flex-direction: column; gap: 16px; }
 .form-group { display: flex; flex-direction: column; gap: 8px; }
-.form-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; letter-spacing: 3px; color: var(--gray); }
+.form-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; letter-spacing: 3px;  color: var(--gray); }
 .form-input { background: var(--dark3); border: 1px solid rgba(255,255,255,0.08); color: var(--cream); padding: 14px 18px; font-family: var(--font-body); font-size: 16px; outline: none; transition: border-color 0.2s; }
 .form-input:focus { border-color: var(--orange); }
 .form-input::placeholder { color: rgba(255,255,255,0.2); }
 select.form-input option { background: var(--dark3); }
-.form-btn { background: var(--orange); color: var(--dark); border: none; padding: 16px 32px; font-family: var(--font-cond); font-size: 14px; font-weight: 700; letter-spacing: 3px; cursor: pointer; transition: background 0.2s; align-self: flex-start; margin-top: 8px; }
+.form-btn { background: var(--orange); color: var(--dark); border: none; padding: 16px 32px; font-family: var(--font-cond); font-size: 14px; font-weight: 700; letter-spacing: 3px;  cursor: pointer; transition: background 0.2s; align-self: flex-start; margin-top: 8px; }
 .form-btn:hover { background: var(--orange-light); }
 .contact-item { margin-bottom: 32px; }
-.contact-item-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; letter-spacing: 4px; color: var(--orange); margin-bottom: 8px; }
+.contact-item-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; letter-spacing: 4px;  color: var(--orange); margin-bottom: 8px; }
 .contact-item-val { font-family: var(--font-cond); font-size: 20px; font-weight: 600; color: var(--cream); letter-spacing: 1px; }
 
 /* FOOTER */
 footer { background: var(--dark); padding: 40px 48px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); }
 .footer-logo { font-family: var(--font-display); font-size: 32px; color: var(--orange); letter-spacing: 3px; }
 .footer-logo span { color: rgba(255,255,255,0.3); }
-.footer-copy { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px; color: var(--gray); }
+.footer-copy { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px; color: var(--gray);  }
 
 /* ANIMATIONS */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -275,7 +277,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     <li><a href="#league">3on3</a></li>
     <li><a href="#contact">Επικοινωνία</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">Ξεκίνα Τωρα</a>
+  <a href="#contact" class="nav-cta">Κάνε Εγγραφή</a>
 </nav>
 
 <!-- HERO -->
@@ -363,8 +365,8 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <p class="hero-eyebrow">Basketball Academy &middot; Περιστέρι, Αττική &middot; btheb.gr</p>
   <h1 class="hero-title">B<br><span class="stroke">the</span><br>B</h1>
   <div class="hero-subtitle-row">
-    <p class="hero-tagline">«Παίζεις μπάσκετ;<br>Κάνε μπει δε μπει.»</p>
-    <div class="hero-location">Ανοικτό Γήπεδο<br>Περιστέρι<br>Αττική</div>
+    <p class="hero-tagline">«Παίζεις μπάσκετ;<br>Κάνε μπει δε μπει...»</p>
+    <div class="hero-location">BtheB Sports Arena<br>Περιστέρι<br>Αττική</div>
   </div>
   <div class="hero-scroll">Scroll</div>
 </section>
@@ -374,23 +376,23 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <div class="marquee-track">
     <span class="marquee-item">Fundamentals</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">OLDSCHOOL mentality</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">Ατομικές προπονήσεις</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">3on3 BtheKing</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">Video analysis</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">BtheB.gr</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">ΑΤΟΜΙΚΗ ΠΡΟΠΟΝΗΣΗ</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">3on3 League</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">Video Analysis</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">btheb.gr</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">Fundamentals</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">OLDSCHOOL mentality</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">Ατομικές προπονήσεις</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">3on3 BtheKing</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">Video analysis</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">BtheB.gr</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">ΑΤΟΜΙΚΗ ΠΡΟΠΟΝΗΣΗ</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">3on3 League</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">Video Analysis</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">btheb.gr</span><span class="marquee-dot">&bull;</span>
   </div>
 </div>
 
 <!-- ABOUT -->
 <section class="about" id="about">
   <p class="section-label reveal">Φιλοσοφία</p>
-  <h2 class="section-title reveal reveal-delay-1">Γιατί<br>BtheB</h2>
+  <h2 class="section-title reveal reveal-delay-1">Γιατί BtheB</h2>
   <div class="about-grid">
     <div class="about-text reveal reveal-delay-2">
       <p>Η BtheB Basketball Academy δεν είναι απλώς ένα γήπεδο με μπάλες. Είναι μια φιλοσοφία: το μπάσκετ διδάσκεται καλύτερα από την αρχή, με σωστά fundamentals, πειθαρχία και αγάπη για το παιχνίδι.</p>
@@ -400,16 +402,16 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     <div class="about-stats reveal reveal-delay-3">
       <div class="stat-box"><div class="stat-num">30+</div><div class="stat-label">Χρόνια Εμπειρίας</div></div>
       <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Πακέτα Προπόνησης</div></div>
-      <div class="stat-box"><div class="stat-num">1on1</div><div class="stat-label">Ατομική Προπόνηση</div></div>
-      <div class="stat-box"><div class="stat-num">3on3</div><div class="stat-label">Μόνιμο Πρωτάθλημα</div></div>
+      <div class="stat-box"><div class="stat-num">1on1</div><div class="stat-label">Ατομικές Προπονήσεις</div></div>
+      <div class="stat-box"><div class="stat-num">3on3</div><div class="stat-label">Πρωτάθλημα</div></div>
     </div>
   </div>
 </section>
 
 <!-- PACKAGES -->
 <section class="packages" id="packages">
-  <p class="section-label reveal">Πακέτα</p>
-  <h2 class="section-title reveal reveal-delay-1">Επίλεξε<br>το πλάνο σου</h2>
+  <p class="section-label reveal">Ατομική Βελτίωση</p>
+  <h2 class="section-title reveal reveal-delay-1">Επίλεξε το πλάνο σου</h2>
   <div class="packages-grid">
     <div class="pkg-card reveal">
       <div class="pkg-name">STARTER</div>
@@ -454,7 +456,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
       <div class="pkg-feature">Εβδομαδιαίο progress report</div>
       <div class="pkg-feature">Video Analysis (κάθε session)</div>
       <div class="pkg-feature">1-on-1 Mentoring</div>
-      <div class="pkg-desc">Για αθλητές που θέλουν το επόμενο επίπεδο. Σχεδόν καθημερινή δουλειά.</div>
+      <div class="pkg-desc">Για αθλητές που θέλουν να αλλάξουν επίπεδο. Καθημερινή δουλειά, Προπόνηση, Βελτίωση.</div>
       <a href="#contact" class="pkg-cta">Ξεκίνα Elite</a>
     </div>
   </div>
@@ -465,15 +467,15 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <p class="section-label reveal">Πρόγραμμα</p>
   <h2 class="section-title reveal reveal-delay-1">Για κάθε<br>ηλικία</h2>
   <div class="ages-tabs reveal reveal-delay-2">
-    <button class="age-tab active" onclick="showAge('a1214')"><span>ως 14</span>Αγόρια / Κορίτσια</button>
-    <button class="age-tab" onclick="showAge('a1417')"><span>14–18</span>Έφηβοι - Νεάνιδες</button>
-    <button class="age-tab" onclick="showAge('a18')"><span>18+</span>Ενήλικες / Advanced</button>
+    <button class="age-tab active" onclick="showAge('a1214')"><span>έως 14</span>Αγωνιστικά και μή τμήματα</button>
+    <button class="age-tab" onclick="showAge('a1417')"><span>14–18</span>Αγωνιστικά τμήματα (αγόρια / κορίτσια)</button>
+    <button class="age-tab" onclick="showAge('a18')"><span>18+</span>Ενήλικες αθλητές / Advanced</button>
   </div>
   <div class="age-panels reveal reveal-delay-3">
     <div class="age-panel active" id="a1214">
       <div>
-        <div class="panel-title">Παίδες</div>
-        <div class="panel-sub">ως 14 ετών &middot; Fundamentals Core</div>
+        <div class="panel-title">Μικρές ηλικίες</div>
+        <div class="panel-sub">έως 14 ετών &middot; Fundamentals Core</div>
         <p class="panel-desc">Κρίσιμη ηλικία για θεμελίωση. Χτίζουμε τη βάση — ball handling, shooting form, footwork — με τρόπο που να μένει για πάντα.</p>
         <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Dynamic Warm-up</strong><small>Σκοινάκι, lateral shuffles, arm circles</small></div></div>
         <div class="session-row"><div class="session-time">8–20'</div><div class="session-info"><strong>Ball Handling</strong><small>Figure-8, between legs, speed dribble</small></div></div>
@@ -494,7 +496,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     </div>
     <div class="age-panel" id="a1417">
       <div>
-        <div class="panel-title">Έφηβοι</div>
+        <div class="panel-title">Αγωνιστικά τμήματα (αγόρια / κορίτσια)</div>
         <div class="panel-sub">14–18 ετών &middot; Σημεία &amp; Τακτική</div>
         <p class="panel-desc">Η φάση όπου χτίζεται ο αθλητής. Σωματική δύναμη, αγωνιστική νοοτροπία, κατανόηση τακτικής. Από fundamentals σε σημεία και αγωνιστική εφαρμογή.</p>
         <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Athletic Warm-up</strong><small>Plyometrics, defensive slides, sprint drills</small></div></div>
@@ -516,7 +518,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     </div>
     <div class="age-panel" id="a18">
       <div>
-        <div class="panel-title">Ενήλικες</div>
+        <div class="panel-title">Ενήλικες αθλητές</div>
         <div class="panel-sub">18+ &middot; Advanced &amp; Individual</div>
         <p class="panel-desc">Παίκτες που γνωρίζουν το παιχνίδι και θέλουν να βελτιωθούν σε συγκεκριμένα σημεία ή να επιστρέψουν σε υψηλό επίπεδο.</p>
         <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Targeted Warm-up</strong><small>Βασισμένο στο σημείο της ημέρας</small></div></div>
@@ -545,12 +547,12 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <div class="league-grid">
     <div>
       <p class="section-label reveal">Πρωτάθλημα</p>
-      <h2 class="section-title reveal reveal-delay-1" style="font-size:clamp(52px,7vw,88px)">BtheB<br>3on3 BtheKing</h2>
+      <h2 class="section-title reveal reveal-delay-1" style="font-size:clamp(52px,7vw,88px)">BtheB<br>3on3 League</h2>
       <p class="about-text reveal reveal-delay-2" style="margin-bottom:32px;">Μόνιμο 3on3 πρωτάθλημα για ενήλικες — κάθε Σαββατοκύριακο στο γήπεδό μας. Κάτι που δεν υπάρχει πουθενά αλλού σε μόνιμη βάση στη δυτική Αθήνα.</p>
       <div class="league-rules reveal reveal-delay-2">
-        <div class="rule-item"><div class="rule-num">01</div><div class="rule-text">Round-robin + Playoffs<span class="rule-sub">4–6 ομάδες ανά division, κάθε ομάδα παίζει με όλες</span></div></div>
-        <div class="rule-item"><div class="rule-num">02</div><div class="rule-text">4 περίοδοι στα 21 ή 12 λεπτά<span class="rule-sub">Κλασικό street rules, check ball, self-officiated</span></div></div>
-        <div class="rule-item"><div class="rule-num">03</div><div class="rule-text">3+1 παίκτες / ομάδα<span class="rule-sub">3 βασικοί + 1 αλλαγή, όλα τα επίπεδα</span></div></div>
+        <div class="rule-item"><div class="rule-num">01</div><div class="rule-text">Round-robin + Playoffs<span class="rule-sub">4–6 ομάδες ανά season, κάθε ομάδα παίζει με όλες</span></div></div>
+        <div class="rule-item"><div class="rule-num">02</div><div class="rule-text">Στα 21 ή 12 λεπτά<span class="rule-sub">Κλασικό street rules, check ball, self-officiated</span></div></div>
+        <div class="rule-item"><div class="rule-num">03</div><div class="rule-text">3+1 παίκτες / ομάδα<span class="rule-sub">3 βασικοί + 1 εφεδρικός, όλα τα επίπεδα</span></div></div>
         <div class="rule-item"><div class="rule-num">04</div><div class="rule-text">Live Leaderboard<span class="rule-sub">Ανανεώνεται παρακάτω μετά από κάθε αγωνιστική</span></div></div>
       </div>
     </div>
@@ -576,12 +578,12 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
         <circle cx="22" cy="152" r="8" stroke="#E8593C" stroke-width="2"/>
       </svg>
       <div class="entry-box reveal reveal-delay-3">
-        <div class="entry-title">7,5&euro;<br>ανά παίκτη</div>
-        <div class="entry-sub">= 30&euro; ανά ομάδα / αγώνα &middot; Τρόπαια &amp; έπαθλα για τους νικητές</div>
+        <div class="entry-title">7.5&euro;<br>ανά παίκτη</div>
+        <div class="entry-sub">= 30&euro; ανά ομάδα / ανά αγώνα &middot; Τρόπαια &amp; αναμνηστικά για τους νικητές</div>
       </div>
       <!-- TOGGLE BUTTON -->
       <button onclick="toggleLeague()" id="league-toggle-btn" style="margin-top:2px;width:100%;background:var(--dark3);border:none;padding:18px 24px;font-family:var(--font-cond);font-size:14px;font-weight:700;letter-spacing:3px;color:var(--orange);cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:space-between;">
-        <span>Αποτελέσματα &amp; Στατιστικά</span>
+        <span>ΑΠΟΤΕΛΕΣΜΑΤΑ &amp; ΣΤΑΤΙΣΤΙΚΑ</span>
         <span id="toggle-arrow" style="font-size:20px;transition:transform 0.3s;">&#8595;</span>
       </button>
     </div>
@@ -604,29 +606,15 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
         <tr>
           <th style="width:60px;">#</th>
           <th>Ομάδα</th>
+          <th>Division</th>
           <th>Αγ.</th>
           <th>Ν</th>
           <th>Η</th>
           <th>Πόντοι</th>
         </tr>
       </thead>
-      <tbody id="standings-body">
-        <!-- filled by JS -->
-      </tbody>
+      <tbody id="standings-body"></tbody>
     </table>
-    <div class="add-result-box" style="margin-top:32px;">
-      <div class="add-result-title">Προσθήκη Αποτελέσματος</div>
-      <div class="add-form">
-        <input class="add-input" id="team-a" placeholder="Ομάδα Α" type="text">
-        <div class="add-vs">VS</div>
-        <input class="add-input" id="team-b" placeholder="Ομάδα Β" type="text">
-        <input class="add-input" id="score-a" placeholder="21" type="number" min="0" style="grid-column:1">
-        <div class="add-vs">–</div>
-        <input class="add-input" id="score-b" placeholder="18" type="number" min="0">
-        <button class="add-btn" onclick="addResult()">Καταχώρηση Αποτελέσματος</button>
-      </div>
-      <div id="result-msg" style="margin-top:12px;font-family:var(--font-cond);font-size:13px;letter-spacing:2px;color:var(--orange);display:none;"></div>
-    </div>
   </div>
 
   <!-- SCHEDULE -->
@@ -647,33 +635,14 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <!-- VIDEOS -->
   <div class="league-panel" id="panel-videos" style="padding:0 0 40px;">
     <p class="section-label" style="margin-bottom:24px;">Highlights &amp; Φωτογραφίες</p>
-    <div class="video-grid" id="video-grid">
-      <div class="video-thumb">
-        <div class="video-placeholder"><span>&#9654;</span></div>
-        <div class="video-overlay"><div class="play-btn"></div></div>
-        <div class="video-label">Season 1 &mdash; Final Highlights</div>
-      </div>
-      <div class="video-thumb">
-        <div class="video-placeholder"><span>&#9654;</span></div>
-        <div class="video-overlay"><div class="play-btn"></div></div>
-        <div class="video-label">Best Plays &mdash; Αγωνιστική 1</div>
-      </div>
-      <div class="video-thumb">
-        <div class="video-placeholder"><span>&#9654;</span></div>
-        <div class="video-overlay"><div class="play-btn"></div></div>
-        <div class="video-label">Βίντεο σύντομα...</div>
-      </div>
-    </div>
-    <p style="font-family:var(--font-cond);font-size:13px;color:var(--gray);margin-top:24px;letter-spacing:1px;">
-      Τα videos φιλοξενούνται στο YouTube / Instagram / TikTok της BtheB. Προσθέστε τα links στον κώδικα για embed.
-    </p>
+    <div id="video-grid"></div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section class="contact" id="contact">
   <p class="section-label reveal">Επικοινωνία</p>
-  <h2 class="section-title reveal reveal-delay-1">Ξεκίνα<br>σήμερα</h2>
+  <h2 class="section-title reveal reveal-delay-1">Κάνε<br>Εγγραφή</h2>
   <div class="contact-grid">
     <form class="contact-form reveal reveal-delay-2" onsubmit="handleForm(event)">
       <div class="form-group">
@@ -706,16 +675,20 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     </form>
     <div class="reveal reveal-delay-3">
       <div class="contact-item">
-        <div class="contact-item-label">Website</div>
-        <div class="contact-item-val">btheb.gr</div>
+        <div class="contact-item-label">Τηλέφωνο</div>
+        <div class="contact-item-val">693 732 7661</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Email</div>
+        <div class="contact-item-val">info@btheb.gr</div>
       </div>
       <div class="contact-item">
         <div class="contact-item-label">Τοποθεσία</div>
-        <div class="contact-item-val">Ανοικτό Γήπεδο<br>Περιστέρι, Αττική</div>
+        <div class="contact-item-val">BtheB Sports Arena<br>Περιστέρι, Αττική</div>
       </div>
       <div class="contact-item">
         <div class="contact-item-label">Instagram</div>
-        <div class="contact-item-val">@btheb.gr</div>
+        <div class="contact-item-val">@btheb.basketball</div>
       </div>
       <div class="contact-item">
         <div class="contact-item-label">3on3 League</div>
@@ -768,87 +741,35 @@ function showLeaguePanel(id) {
   });
 }
 
-// ── DATA (edit these to add real teams/players/matches) ──
-let teams = [
-  { name: 'Οι Τελευταίοι', w: 3, l: 0 },
-  { name: 'Ακαταμάχητοι', w: 2, l: 1 },
-  { name: 'Κόκκινη Μηχανή', w: 1, l: 2 },
-  { name: 'Wildcards', w: 0, l: 3 },
-];
+// ── EMPTY STATE MESSAGE ──
+const emptyMsg = `
+  <div style="padding:48px 24px;text-align:center;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:rgba(232,89,60,0.15);line-height:1;margin-bottom:16px;">BtheB</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;color:var(--orange);margin-bottom:12px;">Σύντομα</div>
+    <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--gray);max-width:360px;margin:0 auto;line-height:1.7;">
+      Το πρωτάθλημα ξεκινά σύντομα. Οι εγγραφές ομάδων είναι ανοιχτές — επικοινώνησε μαζί μας!
+    </p>
+  </div>`;
 
-let matches = [
-  { date: 'Σαβ 14/6', teamA: 'Οι Τελευταίοι', teamB: 'Ακαταμάχητοι', scoreA: 21, scoreB: 17, done: true },
-  { date: 'Σαβ 14/6', teamA: 'Κόκκινη Μηχανή', teamB: 'Wildcards', scoreA: 21, scoreB: 14, done: true },
-  { date: 'Σαβ 21/6', teamA: 'Οι Τελευταίοι', teamB: 'Κόκκινη Μηχανή', scoreA: 21, scoreB: 18, done: true },
-  { date: 'Σαβ 21/6', teamA: 'Ακαταμάχητοι', teamB: 'Wildcards', scoreA: 21, scoreB: 12, done: true },
-  { date: 'Σαβ 28/6', teamA: 'Οι Τελευταίοι', teamB: 'Wildcards', scoreA: null, scoreB: null, done: false, next: true },
-  { date: 'Σαβ 28/6', teamA: 'Ακαταμάχητοι', teamB: 'Κόκκινη Μηχανή', scoreA: null, scoreB: null, done: false },
-];
-
-let players = [
-  { name: 'Νίκος Π.', team: 'Οι Τελευταίοι', ppg: 14.3, apg: 3.1, rpg: 4.2 },
-  { name: 'Γιώργης Κ.', team: 'Ακαταμάχητοι', ppg: 12.7, apg: 5.0, rpg: 2.8 },
-  { name: 'Μιχάλης Σ.', team: 'Κόκκινη Μηχανή', ppg: 11.2, apg: 2.3, rpg: 6.1 },
-  { name: 'Τάσος Δ.', team: 'Wildcards', ppg: 9.8, apg: 1.5, rpg: 3.3 },
-];
-
+// ── RENDER ──
 function renderStandings() {
-  const sorted = [...teams].sort((a,b) => b.w - a.w || a.l - b.l);
-  document.getElementById('standings-body').innerHTML = sorted.map((t,i) => `
-    <tr class="${i===0?'rank-1':''}">
-      <td class="rank">${i+1}</td>
-      <td class="team-name">${t.name}</td>
-      <td>${t.w + t.l}</td>
-      <td><span class="stat-pill win-pill">${t.w}</span></td>
-      <td><span class="stat-pill loss-pill">${t.l}</span></td>
-      <td>${t.w * 2 + t.l}</td>
-    </tr>`).join('');
+  const el = document.getElementById('standings-body');
+  if (el) el.innerHTML = `<tr><td colspan="7" style="padding:0;">${emptyMsg}</td></tr>`;
 }
 
 function renderSchedule() {
-  document.getElementById('schedule-list').innerHTML = matches.map(m => `
-    <div class="match-row">
-      <div class="match-date">${m.date}</div>
-      <div class="match-team">${m.teamA}</div>
-      <div class="${m.done ? 'match-score' : 'match-vs'}">${m.done ? `${m.scoreA}–${m.scoreB}` : 'VS'}</div>
-      <div class="match-team right">${m.teamB}</div>
-      <div class="match-status ${m.done ? 'status-done' : m.next ? 'status-next' : 'status-done'}">${m.done ? 'Τελικό' : m.next ? 'Επόμενο' : 'Αναμένεται'}</div>
-    </div>`).join('');
+  const el = document.getElementById('schedule-list');
+  if (el) el.innerHTML = emptyMsg;
 }
 
 function renderStats() {
-  document.getElementById('stats-grid').innerHTML = players.map(p => `
-    <div class="player-card">
-      <div class="player-name">${p.name}</div>
-      <div class="player-team">${p.team}</div>
-      <div class="player-stats">
-        <div class="pstat"><div class="pstat-num">${p.ppg}</div><div class="pstat-label">PPG</div></div>
-        <div class="pstat"><div class="pstat-num">${p.apg}</div><div class="pstat-label">APG</div></div>
-        <div class="pstat"><div class="pstat-num">${p.rpg}</div><div class="pstat-label">RPG</div></div>
-      </div>
-    </div>`).join('');
+  const el = document.getElementById('stats-grid');
+  if (el) el.innerHTML = emptyMsg;
 }
 
-function addResult() {
-  const ta = document.getElementById('team-a').value.trim();
-  const tb = document.getElementById('team-b').value.trim();
-  const sa = parseInt(document.getElementById('score-a').value);
-  const sb = parseInt(document.getElementById('score-b').value);
-  const msg = document.getElementById('result-msg');
-  if (!ta || !tb || isNaN(sa) || isNaN(sb)) { msg.textContent = 'Συμπλήρωσε όλα τα πεδία.'; msg.style.display='block'; return; }
-
-  // Update or add teams
-  [ta, tb].forEach(name => { if (!teams.find(t => t.name === name)) teams.push({ name, w:0, l:0 }); });
-  const winner = sa > sb ? ta : tb;
-  const loser  = sa > sb ? tb : ta;
-  teams.find(t => t.name === winner).w++;
-  teams.find(t => t.name === loser).l++;
-
-  matches.push({ date: 'Νέο', teamA: ta, teamB: tb, scoreA: sa, scoreB: sb, done: true });
-  renderStandings(); renderSchedule();
-  msg.textContent = `&#10003; ${ta} ${sa} – ${sb} ${tb} καταχωρήθηκε!`;
-  msg.style.display = 'block';
-  ['team-a','team-b','score-a','score-b'].forEach(id => document.getElementById(id).value = '');
+function renderVideos() {
+  const el = document.getElementById('video-grid');
+  if (el) el.innerHTML = emptyMsg;
 }
 
 // ── CONTACT FORM ──
@@ -862,6 +783,7 @@ function handleForm(e) {
 renderStandings();
 renderSchedule();
 renderStats();
+renderVideos();
 </script>
 </body>
 </html>

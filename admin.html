@@ -159,7 +159,33 @@ textarea.f-input { resize: vertical; min-height: 90px; }
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Τελευταίοι Αγώνες</div>
+        <div class="card-title">Δομή Πρωταθλήματος 3on3</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:16px;">
+          <div style="background:var(--dark2);padding:16px;border-top:2px solid var(--orange);">
+            <div style="font-family:var(--font-d);font-size:32px;color:var(--orange);">4</div>
+            <div style="font-family:var(--font-c);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);">Divisions</div>
+            <div style="font-family:var(--font-c);font-size:12px;color:#aaa;margin-top:6px;">6 ομάδες έκαστο</div>
+          </div>
+          <div style="background:var(--dark2);padding:16px;border-top:2px solid var(--orange);">
+            <div style="font-family:var(--font-d);font-size:32px;color:var(--orange);">4&times;4</div>
+            <div style="font-family:var(--font-c);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);">Νέοι Όμιλοι</div>
+            <div style="font-family:var(--font-c);font-size:12px;color:#aaa;margin-top:6px;">Οι 4 πρώτοι/division</div>
+          </div>
+          <div style="background:var(--dark2);padding:16px;border-top:2px solid var(--orange);">
+            <div style="font-family:var(--font-d);font-size:32px;color:var(--orange);">8</div>
+            <div style="font-family:var(--font-c);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);">Top 8</div>
+            <div style="font-family:var(--font-c);font-size:12px;color:#aaa;margin-top:6px;">Οι 2 πρώτοι/όμιλο</div>
+          </div>
+          <div style="background:var(--dark2);padding:16px;border-top:2px solid var(--orange);">
+            <div style="font-family:var(--font-d);font-size:32px;color:var(--orange);">F4</div>
+            <div style="font-family:var(--font-c);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);">Final 4</div>
+            <div style="font-family:var(--font-c);font-size:12px;color:#aaa;margin-top:6px;">Ημιτελικοί + Τελικός</div>
+          </div>
+        </div>
+        <div style="font-family:var(--font-c);font-size:12px;color:var(--gray);letter-spacing:1px;">
+          Κόστος συμμετοχής: <strong style="color:var(--orange);">7,5&euro;/άτομο</strong> &nbsp;&bull;&nbsp; 3+1 παίκτες/ομάδα &nbsp;&bull;&nbsp; Κάθε Σαββατοκύριακο
+        </div>
+      </div>
         <table class="data-table"><thead><tr><th>Ημ/νία</th><th>Αγώνας</th><th>Σκορ</th></tr></thead>
         <tbody id="dash-recent"></tbody></table>
       </div>
@@ -174,14 +200,14 @@ textarea.f-input { resize: vertical; min-height: 90px; }
         <div class="form-row cols-3">
           <div class="f-group"><label class="f-label">Όνομα Ομάδας</label><input class="f-input" id="team-name" placeholder="π.χ. Οι Τελευταίοι"></div>
           <div class="f-group"><label class="f-label">Χρώμα (HEX)</label><input class="f-input" id="team-color" placeholder="#E8593C" type="color" value="#E8593C"></div>
-          <div class="f-group"><label class="f-label">Σεζόν</label><input class="f-input" id="team-season" placeholder="Season 1"></div>
+          <div class="f-group"><label class="f-label">Division</label><input class="f-input" id="team-season" placeholder="Division A"></div>
         </div>
         <button class="btn btn-primary" onclick="addTeam()">Προσθήκη Ομάδας</button>
         <div class="feedback" id="fb-team"></div>
       </div>
       <div class="card">
         <div class="card-title">Καταχωρημένες Ομάδες</div>
-        <table class="data-table"><thead><tr><th>#</th><th>Ομάδα</th><th>Σεζόν</th><th>Ν</th><th>Η</th><th>Ενέργειες</th></tr></thead>
+        <table class="data-table"><thead><tr><th>#</th><th>Ομάδα</th><th>Division</th><th>Ν</th><th>Η</th><th>Ενέργειες</th></tr></thead>
         <tbody id="teams-table"></tbody></table>
       </div>
     </div>
@@ -401,7 +427,7 @@ function loadAll() {
 function addTeam() {
   const name = document.getElementById('team-name').value.trim();
   const color = document.getElementById('team-color').value;
-  const season = document.getElementById('team-season').value.trim() || 'Season 1';
+  const season = document.getElementById('team-season').value.trim() || 'Division A';
   const fb = document.getElementById('fb-team');
   if (!name) return showFb(fb, 'Γράψε όνομα ομάδας.', false);
   const teams = getData('teams', []);
