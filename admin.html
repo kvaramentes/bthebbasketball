@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTHEB Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange: #E8593C; --dark: #0D0D0D; --dark2: #141414; --dark3: #1C1C1C;
+  --cream: #F2EDE4; --gray: #888; --green: #2ECC71; --red: #E74C3C;
+  --font-d: 'Bebas Neue', sans-serif;
+  --font-c: 'Barlow Condensed', sans-serif;
+  --font-b: 'Barlow', sans-serif;
+}
+body { background: var(--dark); color: var(--cream); font-family: var(--font-b); min-height: 100vh; }
+
+/* ── LOGIN ── */
+#login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--dark);
+}
+.login-box {
+  background: var(--dark3); padding: 56px 48px; width: 100%; max-width: 420px;
+  border-top: 3px solid var(--orange);
+}
+.login-logo { font-family: var(--font-d); font-size: 48px; color: var(--orange); letter-spacing: 3px; margin-bottom: 4px; }
+.login-sub { font-family: var(--font-c); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray); margin-bottom: 40px; }
+.login-label { font-family: var(--font-c); font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gray); display: block; margin-bottom: 8px; }
+.login-input { width: 100%; background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); color: var(--cream); padding: 14px 18px; font-family: var(--font-b); font-size: 16px; outline: none; margin-bottom: 20px; transition: border-color 0.2s; }
+.login-input:focus { border-color: var(--orange); }
+.login-btn { width: 100%; background: var(--orange); border: none; color: var(--dark); padding: 15px; font-family: var(--font-c); font-size: 14px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+.login-btn:hover { background: #d94f34; }
+.login-err { color: var(--red); font-family: var(--font-c); font-size: 13px; letter-spacing: 1px; margin-top: 12px; display: none; }
+
+/* ── ADMIN SHELL ── */
+#admin-shell { display: none; min-height: 100vh; }
+.admin-nav {
+  background: var(--dark3); padding: 0 32px; display: flex; align-items: center;
+  gap: 0; border-bottom: 2px solid var(--orange); position: sticky; top: 0; z-index: 100;
+  overflow-x: auto;
+}
+.admin-logo { font-family: var(--font-d); font-size: 24px; color: var(--orange); letter-spacing: 2px; margin-right: 32px; white-space: nowrap; padding: 16px 0; }
+.nav-tab { font-family: var(--font-c); font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); background: none; border: none; padding: 20px 20px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.2s; white-space: nowrap; }
+.nav-tab:hover { color: var(--cream); }
+.nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.logout-btn { margin-left: auto; font-family: var(--font-c); font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); background: none; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.logout-btn:hover { color: var(--red); border-color: var(--red); }
+
+.admin-content { padding: 40px 32px; max-width: 1100px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Headings */
+.panel-title { font-family: var(--font-d); font-size: 48px; color: var(--cream); margin-bottom: 8px; line-height: 1; }
+.panel-sub { font-family: var(--font-c); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 32px; }
+
+/* Cards / sections */
+.card { background: var(--dark3); padding: 28px 32px; margin-bottom: 16px; }
+.card-title { font-family: var(--font-c); font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; }
+
+/* Form elements */
+.form-row { display: grid; gap: 16px; margin-bottom: 16px; }
+.form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.f-group { display: flex; flex-direction: column; gap: 6px; }
+.f-label { font-family: var(--font-c); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
+.f-input { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); color: var(--cream); padding: 11px 14px; font-family: var(--font-b); font-size: 15px; outline: none; transition: border-color 0.2s; width: 100%; }
+.f-input:focus { border-color: var(--orange); }
+.f-input::placeholder { color: rgba(255,255,255,0.2); }
+select.f-input option { background: var(--dark3); }
+textarea.f-input { resize: vertical; min-height: 90px; }
+
+/* Buttons */
+.btn { font-family: var(--font-c); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border: none; padding: 12px 24px; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: var(--orange); color: var(--dark); }
+.btn-primary:hover { background: #d94f34; }
+.btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+.btn-danger:hover { background: var(--red); color: white; }
+.btn-sm { padding: 7px 14px; font-size: 11px; }
+.btn-success { background: var(--green); color: var(--dark); }
+
+/* Tables */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { background: var(--dark2); font-family: var(--font-c); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); padding: 12px 14px; text-align: left; }
+.data-table td { padding: 12px 14px; font-family: var(--font-c); font-size: 15px; color: var(--cream); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table .actions { display: flex; gap: 8px; }
+
+/* Status / feedback */
+.feedback { font-family: var(--font-c); font-size: 13px; letter-spacing: 1px; padding: 10px 16px; margin-top: 12px; display: none; }
+.feedback.ok  { background: rgba(46,204,113,0.12); color: var(--green); }
+.feedback.err { background: rgba(231,76,60,0.12);  color: var(--red); }
+
+/* Password change */
+.pw-hint { font-family: var(--font-c); font-size: 12px; color: var(--gray); margin-top: 8px; letter-spacing: 1px; }
+
+/* GitHub sync status */
+.sync-bar { background: var(--dark2); padding: 12px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; font-family: var(--font-c); font-size: 13px; letter-spacing: 1px; }
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.sync-dot.warn { background: #F39C12; }
+
+@media (max-width: 700px) {
+  .form-row.cols-2, .form-row.cols-3, .form-row.cols-4 { grid-template-columns: 1fr; }
+  .admin-content { padding: 24px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">BTHEB</div>
+    <div class="login-sub">Admin Panel</div>
+    <label class="login-label">Κωδικός Πρόσβασης</label>
+    <input class="login-input" type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Είσοδος</button>
+    <div class="login-err" id="login-err">Λάθος κωδικός. Ξαναπρόσπαθε.</div>
+  </div>
+</div>
+
+<!-- ══ ADMIN SHELL ══ -->
+<div id="admin-shell">
+  <nav class="admin-nav">
+    <div class="admin-logo">BTHEB ADMIN</div>
+    <button class="nav-tab active" onclick="showPanel('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showPanel('teams')">Ομάδες</button>
+    <button class="nav-tab" onclick="showPanel('players')">Αθλητές</button>
+    <button class="nav-tab" onclick="showPanel('results')">Αποτελέσματα</button>
+    <button class="nav-tab" onclick="showPanel('schedule')">Πρόγραμμα</button>
+    <button class="nav-tab" onclick="showPanel('media')">Βίντεο & Media</button>
+    <button class="nav-tab" onclick="showPanel('settings')">Ρυθμίσεις</button>
+    <button class="logout-btn" onclick="doLogout()">Έξοδος</button>
+  </nav>
+
+  <div class="admin-content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="panel-title">Dashboard</div>
+      <div class="panel-sub">Καλωσήρθες πίσω, Coach</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:32px;">
+        <div class="card" style="margin:0"><div class="f-label">Ομάδες</div><div style="font-family:var(--font-d);font-size:52px;color:var(--orange)" id="dash-teams">0</div></div>
+        <div class="card" style="margin:0"><div class="f-label">Αθλητές</div><div style="font-family:var(--font-d);font-size:52px;color:var(--orange)" id="dash-players">0</div></div>
+        <div class="card" style="margin:0"><div class="f-label">Αγώνες</div><div style="font-family:var(--font-d);font-size:52px;color:var(--orange)" id="dash-matches">0</div></div>
+        <div class="card" style="margin:0"><div class="f-label">Βίντεο</div><div style="font-family:var(--font-d);font-size:52px;color:var(--orange)" id="dash-videos">0</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Γρήγορες Ενέργειες</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="showPanel('results')">+ Νέο Αποτέλεσμα</button>
+          <button class="btn btn-primary" onclick="showPanel('teams')">+ Νέα Ομάδα</button>
+          <button class="btn btn-primary" onclick="showPanel('players')">+ Νέος Αθλητής</button>
+          <button class="btn btn-primary" onclick="showPanel('schedule')">+ Νέος Αγώνας</button>
+          <button class="btn btn-primary" onclick="showPanel('media')">+ Ανέβασε Βίντεο</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Τελευταίοι Αγώνες</div>
+        <table class="data-table"><thead><tr><th>Ημ/νία</th><th>Αγώνας</th><th>Σκορ</th></tr></thead>
+        <tbody id="dash-recent"></tbody></table>
+      </div>
+    </div>
+
+    <!-- TEAMS -->
+    <div class="panel" id="panel-teams">
+      <div class="panel-title">Ομάδες</div>
+      <div class="panel-sub">Διαχείριση Ομάδων League</div>
+      <div class="card">
+        <div class="card-title">Προσθήκη Νέας Ομάδας</div>
+        <div class="form-row cols-3">
+          <div class="f-group"><label class="f-label">Όνομα Ομάδας</label><input class="f-input" id="team-name" placeholder="π.χ. Οι Τελευταίοι"></div>
+          <div class="f-group"><label class="f-label">Χρώμα (HEX)</label><input class="f-input" id="team-color" placeholder="#E8593C" type="color" value="#E8593C"></div>
+          <div class="f-group"><label class="f-label">Σεζόν</label><input class="f-input" id="team-season" placeholder="Season 1"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addTeam()">Προσθήκη Ομάδας</button>
+        <div class="feedback" id="fb-team"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Καταχωρημένες Ομάδες</div>
+        <table class="data-table"><thead><tr><th>#</th><th>Ομάδα</th><th>Σεζόν</th><th>Ν</th><th>Η</th><th>Ενέργειες</th></tr></thead>
+        <tbody id="teams-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- PLAYERS -->
+    <div class="panel" id="panel-players">
+      <div class="panel-title">Αθλητές</div>
+      <div class="panel-sub">Στατιστικά & Προφίλ Παικτών</div>
+      <div class="card">
+        <div class="card-title">Προσθήκη Αθλητή</div>
+        <div class="form-row cols-3">
+          <div class="f-group"><label class="f-label">Όνομα</label><input class="f-input" id="p-name" placeholder="Νίκος Π."></div>
+          <div class="f-group"><label class="f-label">Ομάδα</label><select class="f-input" id="p-team"><option value="">Επέλεξε ομάδα...</option></select></div>
+          <div class="f-group"><label class="f-label">Νούμερο</label><input class="f-input" id="p-num" placeholder="#7" type="text"></div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="f-group"><label class="f-label">PPG (μέσος/αγώνα)</label><input class="f-input" id="p-ppg" placeholder="0.0" type="number" step="0.1"></div>
+          <div class="f-group"><label class="f-label">APG</label><input class="f-input" id="p-apg" placeholder="0.0" type="number" step="0.1"></div>
+          <div class="f-group"><label class="f-label">RPG</label><input class="f-input" id="p-rpg" placeholder="0.0" type="number" step="0.1"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addPlayer()">Προσθήκη Αθλητή</button>
+        <div class="feedback" id="fb-player"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Λίστα Αθλητών</div>
+        <table class="data-table"><thead><tr><th>Αθλητής</th><th>Ομάδα</th><th>#</th><th>PPG</th><th>APG</th><th>RPG</th><th>Ενέργειες</th></tr></thead>
+        <tbody id="players-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="panel" id="panel-results">
+      <div class="panel-title">Αποτελέσματα</div>
+      <div class="panel-sub">Καταχώρηση Σκορ Αγώνων</div>
+      <div class="card">
+        <div class="card-title">Νέο Αποτέλεσμα</div>
+        <div class="form-row cols-2">
+          <div class="f-group"><label class="f-label">Ομάδα Α</label><select class="f-input" id="r-teamA"><option value="">Επέλεξε...</option></select></div>
+          <div class="f-group"><label class="f-label">Ομάδα Β</label><select class="f-input" id="r-teamB"><option value="">Επέλεξε...</option></select></div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="f-group"><label class="f-label">Σκορ Α</label><input class="f-input" id="r-scoreA" placeholder="21" type="number" min="0"></div>
+          <div class="f-group"><label class="f-label">Σκορ Β</label><input class="f-input" id="r-scoreB" placeholder="18" type="number" min="0"></div>
+          <div class="f-group"><label class="f-label">Ημερομηνία</label><input class="f-input" id="r-date" type="date"></div>
+        </div>
+        <div class="form-row">
+          <div class="f-group"><label class="f-label">Σχόλιο (προαιρετικό)</label><input class="f-input" id="r-note" placeholder="π.χ. Αγωνιστική 3 — Ημιτελικός"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addResult()">Καταχώρηση Αποτελέσματος</button>
+        <div class="feedback" id="fb-result"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ιστορικό Αγώνων</div>
+        <table class="data-table"><thead><tr><th>Ημ/νία</th><th>Αγώνας</th><th>Σκορ</th><th>Σχόλιο</th><th>Ενέργειες</th></tr></thead>
+        <tbody id="results-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="panel" id="panel-schedule">
+      <div class="panel-title">Πρόγραμμα</div>
+      <div class="panel-sub">Επερχόμενοι Αγώνες</div>
+      <div class="card">
+        <div class="card-title">Προσθήκη Αγώνα</div>
+        <div class="form-row cols-2">
+          <div class="f-group"><label class="f-label">Ομάδα Α</label><select class="f-input" id="s-teamA"><option value="">Επέλεξε...</option></select></div>
+          <div class="f-group"><label class="f-label">Ομάδα Β</label><select class="f-input" id="s-teamB"><option value="">Επέλεξε...</option></select></div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="f-group"><label class="f-label">Ημερομηνία</label><input class="f-input" id="s-date" type="date"></div>
+          <div class="f-group"><label class="f-label">Ώρα</label><input class="f-input" id="s-time" type="time" placeholder="18:00"></div>
+          <div class="f-group"><label class="f-label">Φάση</label><input class="f-input" id="s-phase" placeholder="π.χ. Αγωνιστική 3"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addSchedule()">Προσθήκη στο Πρόγραμμα</button>
+        <div class="feedback" id="fb-schedule"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Πρόγραμμα Αγώνων</div>
+        <table class="data-table"><thead><tr><th>Ημ/νία</th><th>Ώρα</th><th>Αγώνας</th><th>Φάση</th><th>Ενέργειες</th></tr></thead>
+        <tbody id="schedule-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- MEDIA -->
+    <div class="panel" id="panel-media">
+      <div class="panel-title">Βίντεο & Media</div>
+      <div class="panel-sub">Προσθήκη Βίντεο & Φωτογραφιών</div>
+      <div class="card">
+        <div class="card-title">Προσθήκη Βίντεο (YouTube / Instagram)</div>
+        <div class="form-row cols-2">
+          <div class="f-group"><label class="f-label">Τίτλος</label><input class="f-input" id="v-title" placeholder="Season 1 — Final Highlights"></div>
+          <div class="f-group"><label class="f-label">Τύπος</label>
+            <select class="f-input" id="v-type">
+              <option value="youtube">YouTube</option>
+              <option value="instagram">Instagram</option>
+              <option value="other">Άλλο URL</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="f-group"><label class="f-label">URL / YouTube ID</label><input class="f-input" id="v-url" placeholder="https://youtube.com/watch?v=... ή το ID μόνο"></div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="f-group"><label class="f-label">Κατηγορία</label>
+            <select class="f-input" id="v-cat">
+              <option>Αγώνας Highlights</option>
+              <option>Best Plays</option>
+              <option>Τελικός</option>
+              <option>Προπόνηση</option>
+              <option>Άλλο</option>
+            </select>
+          </div>
+          <div class="f-group"><label class="f-label">Ημερομηνία</label><input class="f-input" id="v-date" type="date"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addVideo()">Προσθήκη Βίντεο</button>
+        <div class="feedback" id="fb-video"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Καταχωρημένα Βίντεο</div>
+        <table class="data-table"><thead><tr><th>Τίτλος</th><th>Τύπος</th><th>Κατηγορία</th><th>Ημ/νία</th><th>Ενέργειες</th></tr></thead>
+        <tbody id="videos-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel" id="panel-settings">
+      <div class="panel-title">Ρυθμίσεις</div>
+      <div class="panel-sub">Διαχείριση Admin</div>
+      <div class="card">
+        <div class="card-title">Αλλαγή Κωδικού Admin</div>
+        <div class="form-row cols-2">
+          <div class="f-group"><label class="f-label">Νέος Κωδικός</label><input class="f-input" id="new-pw" type="password" placeholder="Νέος κωδικός"></div>
+          <div class="f-group"><label class="f-label">Επαλήθευση</label><input class="f-input" id="new-pw2" type="password" placeholder="Επανάλαβε κωδικό"></div>
+        </div>
+        <button class="btn btn-primary" onclick="changePw()">Αποθήκευση Κωδικού</button>
+        <div class="feedback" id="fb-pw"></div>
+        <p class="pw-hint" style="margin-top:16px;">Ο κωδικός αποθηκεύεται στον browser σου. Χρησιμοποίησε διαφορετικό device; Θα χρειαστείς τον αρχικό κωδικό: <strong>btheb2025</strong></p>
+      </div>
+      <div class="card">
+        <div class="card-title">Εξαγωγή Δεδομένων</div>
+        <p style="font-family:var(--font-b);font-size:15px;color:#aaa;margin-bottom:20px;">Κατέβασε όλα τα δεδομένα σε JSON για backup ή για να τα εισάγεις στο site αρχείο.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="exportData()">Εξαγωγή JSON</button>
+          <button class="btn btn-primary" onclick="generateSiteData()">Δημιουργία data.js για Site</button>
+        </div>
+        <div class="feedback" id="fb-export"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Εισαγωγή Δεδομένων</div>
+        <div class="f-group" style="margin-bottom:16px;"><label class="f-label">Φόρτωσε JSON αρχείο</label><input class="f-input" id="import-file" type="file" accept=".json"></div>
+        <button class="btn btn-primary" onclick="importData()">Εισαγωγή</button>
+        <div class="feedback" id="fb-import"></div>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div><!-- /admin-shell -->
+
+<script>
+// ══════════════════════════════════════════
+// PASSWORD (stored in localStorage)
+// Change default here or via the Settings panel
+// ══════════════════════════════════════════
+const DEFAULT_PW = 'btheb2025';
+
+function getPw() { return localStorage.getItem('btheb_admin_pw') || DEFAULT_PW; }
+
+function doLogin() {
+  const val = document.getElementById('pw-input').value;
+  const err = document.getElementById('login-err');
+  if (val === getPw()) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-shell').style.display = 'block';
+    loadAll();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+function doLogout() {
+  document.getElementById('admin-shell').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+}
+function changePw() {
+  const p1 = document.getElementById('new-pw').value;
+  const p2 = document.getElementById('new-pw2').value;
+  const fb = document.getElementById('fb-pw');
+  if (!p1 || p1.length < 6) return showFb(fb, 'Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.', false);
+  if (p1 !== p2) return showFb(fb, 'Οι κωδικοί δεν ταιριάζουν.', false);
+  localStorage.setItem('btheb_admin_pw', p1);
+  showFb(fb, '✓ Κωδικός αποθηκεύτηκε!', true);
+  document.getElementById('new-pw').value = '';
+  document.getElementById('new-pw2').value = '';
+}
+
+// ══════════════════════════════════════════
+// DATA LAYER (localStorage)
+// ══════════════════════════════════════════
+function getData(key, def) {
+  try { return JSON.parse(localStorage.getItem('btheb_' + key)) || def; } catch { return def; }
+}
+function setData(key, val) { localStorage.setItem('btheb_' + key, JSON.stringify(val)); }
+
+function loadAll() {
+  renderDashboard();
+  renderTeamsTable();
+  renderPlayersTable();
+  renderResultsTable();
+  renderScheduleTable();
+  renderVideosTable();
+  refreshTeamSelects();
+}
+
+// ── TEAMS ──
+function addTeam() {
+  const name = document.getElementById('team-name').value.trim();
+  const color = document.getElementById('team-color').value;
+  const season = document.getElementById('team-season').value.trim() || 'Season 1';
+  const fb = document.getElementById('fb-team');
+  if (!name) return showFb(fb, 'Γράψε όνομα ομάδας.', false);
+  const teams = getData('teams', []);
+  if (teams.find(t => t.name === name)) return showFb(fb, 'Αυτή η ομάδα υπάρχει ήδη.', false);
+  teams.push({ id: Date.now(), name, color, season, w: 0, l: 0 });
+  setData('teams', teams);
+  showFb(fb, '✓ Ομάδα "' + name + '" προστέθηκε!', true);
+  document.getElementById('team-name').value = '';
+  renderTeamsTable(); refreshTeamSelects(); renderDashboard();
+}
+function deleteTeam(id) {
+  if (!confirm('Διαγραφή ομάδας;')) return;
+  setData('teams', getData('teams', []).filter(t => t.id !== id));
+  renderTeamsTable(); refreshTeamSelects(); renderDashboard();
+}
+function renderTeamsTable() {
+  const teams = getData('teams', []);
+  document.getElementById('teams-table').innerHTML = teams.length
+    ? teams.map((t,i) => `<tr><td>${i+1}</td><td><span style="display:inline-block;width:12px;height:12px;background:${t.color};border-radius:2px;margin-right:8px;vertical-align:middle;"></span>${t.name}</td><td>${t.season}</td><td>${t.w}</td><td>${t.l}</td><td class="actions"><button class="btn btn-danger btn-sm" onclick="deleteTeam(${t.id})">Διαγραφή</button></td></tr>`).join('')
+    : '<tr><td colspan="6" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν ομάδες ακόμα.</td></tr>';
+}
+
+// ── PLAYERS ──
+function addPlayer() {
+  const name = document.getElementById('p-name').value.trim();
+  const team = document.getElementById('p-team').value;
+  const num  = document.getElementById('p-num').value.trim();
+  const ppg  = parseFloat(document.getElementById('p-ppg').value) || 0;
+  const apg  = parseFloat(document.getElementById('p-apg').value) || 0;
+  const rpg  = parseFloat(document.getElementById('p-rpg').value) || 0;
+  const fb   = document.getElementById('fb-player');
+  if (!name || !team) return showFb(fb, 'Γράψε όνομα και επέλεξε ομάδα.', false);
+  const players = getData('players', []);
+  players.push({ id: Date.now(), name, team, num, ppg, apg, rpg });
+  setData('players', players);
+  showFb(fb, '✓ Αθλητής "' + name + '" προστέθηκε!', true);
+  ['p-name','p-num','p-ppg','p-apg','p-rpg'].forEach(id => document.getElementById(id).value = '');
+  renderPlayersTable(); renderDashboard();
+}
+function deletePlayer(id) {
+  if (!confirm('Διαγραφή αθλητή;')) return;
+  setData('players', getData('players', []).filter(p => p.id !== id));
+  renderPlayersTable(); renderDashboard();
+}
+function renderPlayersTable() {
+  const players = getData('players', []);
+  document.getElementById('players-table').innerHTML = players.length
+    ? players.map(p => `<tr><td>${p.name}</td><td>${p.team}</td><td>${p.num||'—'}</td><td>${p.ppg}</td><td>${p.apg}</td><td>${p.rpg}</td><td class="actions"><button class="btn btn-danger btn-sm" onclick="deletePlayer(${p.id})">Διαγραφή</button></td></tr>`).join('')
+    : '<tr><td colspan="7" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν αθλητές ακόμα.</td></tr>';
+}
+
+// ── RESULTS ──
+function addResult() {
+  const tA = document.getElementById('r-teamA').value;
+  const tB = document.getElementById('r-teamB').value;
+  const sA = parseInt(document.getElementById('r-scoreA').value);
+  const sB = parseInt(document.getElementById('r-scoreB').value);
+  const dt = document.getElementById('r-date').value;
+  const note = document.getElementById('r-note').value.trim();
+  const fb = document.getElementById('fb-result');
+  if (!tA || !tB || tA === tB) return showFb(fb, 'Επέλεξε δύο διαφορετικές ομάδες.', false);
+  if (isNaN(sA) || isNaN(sB)) return showFb(fb, 'Συμπλήρωσε τα σκορ.', false);
+  if (!dt) return showFb(fb, 'Επέλεξε ημερομηνία.', false);
+  const results = getData('results', []);
+  results.push({ id: Date.now(), teamA: tA, teamB: tB, scoreA: sA, scoreB: sB, date: dt, note });
+  setData('results', results);
+  // Update team W/L
+  const teams = getData('teams', []);
+  const winner = sA > sB ? tA : tB;
+  const loser  = sA > sB ? tB : tA;
+  const tw = teams.find(t => t.name === winner);
+  const tl = teams.find(t => t.name === loser);
+  if (tw) tw.w++; if (tl) tl.l++;
+  setData('teams', teams);
+  showFb(fb, `✓ ${tA} ${sA}–${sB} ${tB} καταχωρήθηκε!`, true);
+  ['r-scoreA','r-scoreB','r-date','r-note'].forEach(id => document.getElementById(id).value = '');
+  renderResultsTable(); renderTeamsTable(); renderDashboard();
+}
+function deleteResult(id) {
+  if (!confirm('Διαγραφή αποτελέσματος;')) return;
+  setData('results', getData('results', []).filter(r => r.id !== id));
+  renderResultsTable(); renderDashboard();
+}
+function renderResultsTable() {
+  const results = getData('results', []).slice().reverse();
+  document.getElementById('results-table').innerHTML = results.length
+    ? results.map(r => `<tr><td>${fmtDate(r.date)}</td><td>${r.teamA} vs ${r.teamB}</td><td style="color:var(--orange);font-family:var(--font-d);font-size:20px;">${r.scoreA}–${r.scoreB}</td><td style="color:var(--gray)">${r.note||'—'}</td><td class="actions"><button class="btn btn-danger btn-sm" onclick="deleteResult(${r.id})">Διαγραφή</button></td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν αποτελέσματα ακόμα.</td></tr>';
+}
+
+// ── SCHEDULE ──
+function addSchedule() {
+  const tA = document.getElementById('s-teamA').value;
+  const tB = document.getElementById('s-teamB').value;
+  const dt = document.getElementById('s-date').value;
+  const time = document.getElementById('s-time').value;
+  const phase = document.getElementById('s-phase').value.trim();
+  const fb = document.getElementById('fb-schedule');
+  if (!tA || !tB || tA === tB) return showFb(fb, 'Επέλεξε δύο διαφορετικές ομάδες.', false);
+  if (!dt) return showFb(fb, 'Επέλεξε ημερομηνία.', false);
+  const schedule = getData('schedule', []);
+  schedule.push({ id: Date.now(), teamA: tA, teamB: tB, date: dt, time, phase });
+  setData('schedule', schedule);
+  showFb(fb, `✓ Αγώνας ${tA} vs ${tB} προστέθηκε!`, true);
+  ['s-date','s-time','s-phase'].forEach(id => document.getElementById(id).value = '');
+  renderScheduleTable(); renderDashboard();
+}
+function deleteSchedule(id) {
+  if (!confirm('Διαγραφή αγώνα;')) return;
+  setData('schedule', getData('schedule', []).filter(s => s.id !== id));
+  renderScheduleTable(); renderDashboard();
+}
+function renderScheduleTable() {
+  const sc = getData('schedule', []).sort((a,b) => a.date.localeCompare(b.date));
+  document.getElementById('schedule-table').innerHTML = sc.length
+    ? sc.map(s => `<tr><td>${fmtDate(s.date)}</td><td>${s.time||'—'}</td><td>${s.teamA} vs ${s.teamB}</td><td>${s.phase||'—'}</td><td class="actions"><button class="btn btn-danger btn-sm" onclick="deleteSchedule(${s.id})">Διαγραφή</button></td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν αγώνες στο πρόγραμμα.</td></tr>';
+}
+
+// ── VIDEOS ──
+function addVideo() {
+  const title = document.getElementById('v-title').value.trim();
+  const type  = document.getElementById('v-type').value;
+  const url   = document.getElementById('v-url').value.trim();
+  const cat   = document.getElementById('v-cat').value;
+  const dt    = document.getElementById('v-date').value;
+  const fb    = document.getElementById('fb-video');
+  if (!title || !url) return showFb(fb, 'Συμπλήρωσε τίτλο και URL.', false);
+  const videos = getData('videos', []);
+  videos.push({ id: Date.now(), title, type, url, cat, date: dt });
+  setData('videos', videos);
+  showFb(fb, '✓ Βίντεο "' + title + '" προστέθηκε!', true);
+  ['v-title','v-url','v-date'].forEach(id => document.getElementById(id).value = '');
+  renderVideosTable(); renderDashboard();
+}
+function deleteVideo(id) {
+  if (!confirm('Διαγραφή βίντεο;')) return;
+  setData('videos', getData('videos', []).filter(v => v.id !== id));
+  renderVideosTable(); renderDashboard();
+}
+function renderVideosTable() {
+  const videos = getData('videos', []).slice().reverse();
+  document.getElementById('videos-table').innerHTML = videos.length
+    ? videos.map(v => `<tr><td>${v.title}</td><td>${v.type}</td><td>${v.cat}</td><td>${v.date ? fmtDate(v.date) : '—'}</td><td class="actions"><a href="${v.url}" target="_blank" class="btn btn-primary btn-sm">Άνοιγμα</a><button class="btn btn-danger btn-sm" onclick="deleteVideo(${v.id})">Διαγραφή</button></td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν βίντεο ακόμα.</td></tr>';
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  document.getElementById('dash-teams').textContent   = getData('teams',   []).length;
+  document.getElementById('dash-players').textContent = getData('players', []).length;
+  document.getElementById('dash-matches').textContent = getData('results', []).length;
+  document.getElementById('dash-videos').textContent  = getData('videos',  []).length;
+  const recent = getData('results', []).slice(-5).reverse();
+  document.getElementById('dash-recent').innerHTML = recent.length
+    ? recent.map(r => `<tr><td>${fmtDate(r.date)}</td><td>${r.teamA} vs ${r.teamB}</td><td style="color:var(--orange);font-family:var(--font-d);font-size:18px;">${r.scoreA}–${r.scoreB}</td></tr>`).join('')
+    : '<tr><td colspan="3" style="color:var(--gray);padding:16px;">Καμία καταχώρηση ακόμα.</td></tr>';
+}
+
+// ── SELECTS ──
+function refreshTeamSelects() {
+  const teams = getData('teams', []);
+  const opts = '<option value="">Επέλεξε...</option>' + teams.map(t => `<option>${t.name}</option>`).join('');
+  ['r-teamA','r-teamB','s-teamA','s-teamB'].forEach(id => document.getElementById(id).innerHTML = opts);
+  document.getElementById('p-team').innerHTML = '<option value="">Επέλεξε ομάδα...</option>' + teams.map(t => `<option>${t.name}</option>`).join('');
+}
+
+// ── EXPORT / IMPORT ──
+function exportData() {
+  const all = { teams: getData('teams',[]), players: getData('players',[]), results: getData('results',[]), schedule: getData('schedule',[]), videos: getData('videos',[]) };
+  const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'btheb_data_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  showFb(document.getElementById('fb-export'), '✓ Δεδομένα εξήχθησαν!', true);
+}
+
+function generateSiteData() {
+  const all = { teams: getData('teams',[]), players: getData('players',[]), results: getData('results',[]), schedule: getData('schedule',[]), videos: getData('videos',[]) };
+  const js = '// BTHEB Site Data — generated ' + new Date().toLocaleString('el-GR') + '\nconst BTHEB_DATA = ' + JSON.stringify(all, null, 2) + ';\n';
+  const blob = new Blob([js], { type: 'text/javascript' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'btheb_data.js'; a.click();
+  showFb(document.getElementById('fb-export'), '✓ data.js δημιουργήθηκε! Ανέβασέ το στο GitHub repository σου.', true);
+}
+
+function importData() {
+  const file = document.getElementById('import-file').files[0];
+  const fb = document.getElementById('fb-import');
+  if (!file) return showFb(fb, 'Επέλεξε αρχείο JSON.', false);
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.teams)    setData('teams',    d.teams);
+      if (d.players)  setData('players',  d.players);
+      if (d.results)  setData('results',  d.results);
+      if (d.schedule) setData('schedule', d.schedule);
+      if (d.videos)   setData('videos',   d.videos);
+      loadAll();
+      showFb(fb, '✓ Δεδομένα εισήχθησαν επιτυχώς!', true);
+    } catch { showFb(fb, 'Μη έγκυρο JSON αρχείο.', false); }
+  };
+  reader.readAsText(file);
+}
+
+// ── UTILS ──
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const tabs = ['dashboard','teams','players','results','schedule','media','settings'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)]?.classList.add('active');
+}
+function showFb(el, msg, ok) {
+  el.textContent = msg; el.className = 'feedback ' + (ok ? 'ok' : 'err');
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+// Focus password field on load
+document.getElementById('pw-input').focus();
+</script>
+</body>
+</html>
