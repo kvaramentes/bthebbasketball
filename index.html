@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BtheB — Basketball Academy Peristeri</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -17,7 +17,7 @@
   --cream: #F2EDE4;
   --cream2: #E8E0D2;
   --gray: #888;
-  --font-display: 'Bebas Neue', sans-serif;
+  --font-display: 'Oswald', sans-serif;
   --font-cond: 'Barlow Condensed', sans-serif;
   --font-body: 'Barlow', sans-serif;
 }
@@ -248,6 +248,19 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 
+/* Registration form */
+.reg-tab { flex:1; padding:14px 12px; background:var(--dark2); border:none; cursor:pointer; font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:1px; color:var(--gray); transition:all 0.2s; }
+.reg-tab:hover { color:var(--cream); }
+.reg-tab.active { background:var(--orange); color:var(--dark); }
+.reg-panel { display:none; background:var(--dark2); padding:28px; }
+.reg-panel.active { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.f-grp { display:flex; flex-direction:column; gap:6px; }
+.f-lbl { font-family:var(--font-cond); font-size:11px; font-weight:600; letter-spacing:2px; color:var(--gray); }
+.r-input { background:var(--dark3); border:1px solid rgba(255,255,255,0.08); color:var(--cream); padding:12px 14px; font-family:var(--font-body); font-size:15px; outline:none; transition:border-color 0.2s; width:100%; }
+.r-input:focus { border-color:var(--orange); }
+.r-input::placeholder { color:rgba(255,255,255,0.2); }
+select.r-input option { background:var(--dark3); }
+
 @media (max-width: 900px) {
   nav { padding: 16px 24px; }
   .nav-links { display: none; }
@@ -277,7 +290,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     <li><a href="#league">3on3</a></li>
     <li><a href="#contact">Επικοινωνία</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">Στείλε μήνυμα</a>
+  <a href="#contact" class="nav-cta">Ξεκίνα Τωρα</a>
 </nav>
 
 <!-- HERO -->
@@ -365,7 +378,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <p class="hero-eyebrow">Basketball Academy &middot; Περιστέρι, Αττική &middot; btheb.gr</p>
   <h1 class="hero-title">B<br><span class="stroke">the</span><br>B</h1>
   <div class="hero-subtitle-row">
-    <p class="hero-tagline">«Παίζεις μπάσκετ;<br>Κάνε μπει δε μπει...»</p>
+    <p class="hero-tagline">«Παίζεις μπάσκετ;<br>Κάνε μπει δε μπει.»</p>
     <div class="hero-location">BtheB Sports Arena<br>Περιστέρι<br>Αττική</div>
   </div>
   <div class="hero-scroll">Scroll</div>
@@ -375,15 +388,15 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
 <div class="marquee-section">
   <div class="marquee-track">
     <span class="marquee-item">Fundamentals</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">OLDSCHOOL mentality</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">ΑΤΟΜΙΚΗ ΠΡΟΠΟΝΗΣΗ</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">3on3 League</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">OLDSCHOOL Mentality</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">Ατομικές Προπονήσεις</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">3on3 league</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">Video Analysis</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">btheb.gr</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">Fundamentals</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">OLDSCHOOL mentality</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">ΑΤΟΜΙΚΗ ΠΡΟΠΟΝΗΣΗ</span><span class="marquee-dot">&bull;</span>
-    <span class="marquee-item">3on3 League</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">OLDSCHOOL Mentality</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">Ατομικές Προπονήσεις</span><span class="marquee-dot">&bull;</span>
+    <span class="marquee-item">3on3 league</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">Video Analysis</span><span class="marquee-dot">&bull;</span>
     <span class="marquee-item">btheb.gr</span><span class="marquee-dot">&bull;</span>
   </div>
@@ -397,7 +410,9 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     <div class="about-text reveal reveal-delay-2">
       <p>Η BtheB Basketball Academy δεν είναι απλώς ένα γήπεδο με μπάλες. Είναι μια φιλοσοφία: το μπάσκετ διδάσκεται καλύτερα από την αρχή, με σωστά fundamentals, πειθαρχία και αγάπη για το παιχνίδι.</p>
       <p>Το «μπει δε μπει» είναι η πιο honest διαδικασία που υπάρχει στο μπάσκετ. Σουτάρεις. Αν μπει, παίρνεις την μπάλα. Αλλιώς την παίρνει ο αντίπαλος. Απλό, δίκαιο, ανταγωνιστικό — ακριβώς όπως πρέπει να είναι η προπόνηση.</p>
-      <p>Ο προπονητής και οι συνεργάτες της BtheB έχουν πολλά χρόνια εμπειρία στη διδασκαλία του αθλήματος σε όλες τις ηλικίες και πιστεύουν ότι κάθε αθλητής — από το 5χρονο που κρατά μπάλα για πρώτη φορά μέχρι τον 40+ που θέλει να ξαναβρεί τον εαυτό του στο παιχνίδι — αξίζει προσωπική προσοχή.</p>
+      <p>Ο προπονητής και οι συνεργάτες της BtheB Basketball Academy έχουν πολλά χρόνια εμπειρία στη διδασκαλία του αθλήματος σε όλες τις ηλικίες και πιστεύουν ότι κάθε αθλητής — από το 5χρονο που κρατά μπάλα για πρώτη φορά μέχρι τον 40+ που θέλει να ξαναβρεί τον εαυτό του στο παιχνίδι — αξίζει προσωπική προσοχή.</p>
+      <p>Στην BtheB δεν μαθαίνεις απλώς να σουτάρεις ή να τριπλάρεις. Μαθαίνεις να έχεις την ψυχή να πάρεις το σουτ όταν η μπάλα ζυγίζει 100 κιλά.  Μαθαίνεις να παίζεις άμυνα όταν ο αντίπαλος απλά "δεν παίζεται".</p>
+      <p>Μαθαίνεις να είσαι αθλητής! Ειδικευόμαστε στη δημιουργία ολοκληρωμένων αθλητών (PG, SG, SF) με έμφαση στη μηχανική του σουτ και την πνευματική σκληράδα, μαθαίνοντας τα βασικά του αθλήματος. Ξεκινάμε εκεί που οι άλλοι σταματούν. </p>
     </div>
     <div class="about-stats reveal reveal-delay-3">
       <div class="stat-box"><div class="stat-num">30+</div><div class="stat-label">Χρόνια Εμπειρίας</div></div>
@@ -410,7 +425,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
 
 <!-- PACKAGES -->
 <section class="packages" id="packages">
-  <p class="section-label reveal">Ατομική Βελτίωση</p>
+  <p class="section-label reveal">Πακέτα</p>
   <h2 class="section-title reveal reveal-delay-1">Επίλεξε το πλάνο σου</h2>
   <div class="packages-grid">
     <div class="pkg-card reveal">
@@ -441,7 +456,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
       <div class="pkg-feature">Μηνιαίο progress report</div>
       <div class="pkg-feature">Video Analysis (2x/μήνα)</div>
       <div class="pkg-feature off">Mentoring</div>
-      <div class="pkg-desc">Για αγωνιστικούς αθλητές που θέλουν να βλέπουν και να καταλαβαίνουν την πρόοδό τους.</div>
+      <div class="pkg-desc">Για αθλητές αγωνιστικού επιπέδου που θέλουν να βλέπουν και να καταλαβαίνουν την πρόοδό τους.</div>
       <a href="#contact" class="pkg-cta">Ξεκίνα Premium</a>
     </div>
     <div class="pkg-card reveal reveal-delay-2">
@@ -456,7 +471,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
       <div class="pkg-feature">Εβδομαδιαίο progress report</div>
       <div class="pkg-feature">Video Analysis (κάθε session)</div>
       <div class="pkg-feature">1-on-1 Mentoring</div>
-      <div class="pkg-desc">Για αθλητές που θέλουν να αλλάξουν επίπεδο. Καθημερινή δουλειά, Προπόνηση, Βελτίωση.</div>
+      <div class="pkg-desc">Για αθλητές που θέλουν το επόμενο επίπεδο. Καθημερινή δουλειά. Καθημερινή βελτίωση</div>
       <a href="#contact" class="pkg-cta">Ξεκίνα Elite</a>
     </div>
   </div>
@@ -467,14 +482,14 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
   <p class="section-label reveal">Πρόγραμμα</p>
   <h2 class="section-title reveal reveal-delay-1">Για κάθε<br>ηλικία</h2>
   <div class="ages-tabs reveal reveal-delay-2">
-    <button class="age-tab active" onclick="showAge('a1214')"><span>έως 14</span>Αγωνιστικά και μή τμήματα</button>
-    <button class="age-tab" onclick="showAge('a1417')"><span>14–18</span>Αγωνιστικά τμήματα (αγόρια / κορίτσια)</button>
+    <button class="age-tab active" onclick="showAge('a1214')"><span>έως 14</span>Μικρές ηλικίες</button>
+    <button class="age-tab" onclick="showAge('a1417')"><span>14–18</span>Αγωνιστικά τμήματα</button>
     <button class="age-tab" onclick="showAge('a18')"><span>18+</span>Ενήλικες αθλητές / Advanced</button>
   </div>
   <div class="age-panels reveal reveal-delay-3">
     <div class="age-panel active" id="a1214">
       <div>
-        <div class="panel-title">Μικρές ηλικίες</div>
+        <div class="panel-title">Παίδες</div>
         <div class="panel-sub">έως 14 ετών &middot; Fundamentals Core</div>
         <p class="panel-desc">Κρίσιμη ηλικία για θεμελίωση. Χτίζουμε τη βάση — ball handling, shooting form, footwork — με τρόπο που να μένει για πάντα.</p>
         <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Dynamic Warm-up</strong><small>Σκοινάκι, lateral shuffles, arm circles</small></div></div>
@@ -496,7 +511,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     </div>
     <div class="age-panel" id="a1417">
       <div>
-        <div class="panel-title">Αγωνιστικά τμήματα (αγόρια / κορίτσια)</div>
+        <div class="panel-title">Έφηβοι</div>
         <div class="panel-sub">14–18 ετών &middot; Σημεία &amp; Τακτική</div>
         <p class="panel-desc">Η φάση όπου χτίζεται ο αθλητής. Σωματική δύναμη, αγωνιστική νοοτροπία, κατανόηση τακτικής. Από fundamentals σε σημεία και αγωνιστική εφαρμογή.</p>
         <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Athletic Warm-up</strong><small>Plyometrics, defensive slides, sprint drills</small></div></div>
@@ -518,7 +533,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
     </div>
     <div class="age-panel" id="a18">
       <div>
-        <div class="panel-title">Ενήλικες αθλητές</div>
+        <div class="panel-title">Ενήλικες Αθλητές</div>
         <div class="panel-sub">18+ &middot; Advanced &amp; Individual</div>
         <p class="panel-desc">Παίκτες που γνωρίζουν το παιχνίδι και θέλουν να βελτιωθούν σε συγκεκριμένα σημεία ή να επιστρέψουν σε υψηλό επίπεδο.</p>
         <div class="session-row"><div class="session-time">0–8'</div><div class="session-info"><strong>Targeted Warm-up</strong><small>Βασισμένο στο σημείο της ημέρας</small></div></div>
@@ -544,15 +559,15 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
 <!-- 3ON3 SECTION -->
 <section class="league" id="league">
   <div class="league-bg">3on3</div>
-  <div class="league-grid">
+  <div class="league-grid" style="max-width:900px;margin:0 auto;">
     <div>
       <p class="section-label reveal">Πρωτάθλημα</p>
       <h2 class="section-title reveal reveal-delay-1" style="font-size:clamp(52px,7vw,88px)">BtheB<br>3on3 League</h2>
-      <p class="about-text reveal reveal-delay-2" style="margin-bottom:32px;">Μόνιμο 3on3 πρωτάθλημα για ενήλικες — κάθε Σαββατοκύριακο στο γήπεδό μας. Κάτι που δεν υπάρχει πουθενά αλλού σε μόνιμη βάση στη δυτική Αθήνα.</p>
+      <p class="about-text reveal reveal-delay-2" style="margin-bottom:32px;">Μόνιμο 3on3 πρωτάθλημα για ενήλικες — κάθε Σαββατοκύριακο στο γήπεδό μας. Κάτι που δεν υπάρχει πουθενά αλλού σε μόνιμη βάση στη δυτική Αττική.</p>
       <div class="league-rules reveal reveal-delay-2">
-        <div class="rule-item"><div class="rule-num">01</div><div class="rule-text">Round-robin + Playoffs<span class="rule-sub">4–6 ομάδες ανά season, κάθε ομάδα παίζει με όλες</span></div></div>
-        <div class="rule-item"><div class="rule-num">02</div><div class="rule-text">Στα 21 ή 12 λεπτά<span class="rule-sub">Κλασικό street rules, check ball, self-officiated</span></div></div>
-        <div class="rule-item"><div class="rule-num">03</div><div class="rule-text">3+1 παίκτες / ομάδα<span class="rule-sub">3 βασικοί + 1 εφεδρικός, όλα τα επίπεδα</span></div></div>
+        <div class="rule-item"><div class="rule-num">01</div><div class="rule-text">Round-robin + Playoffs<span class="rule-sub">6 ομάδες ανά division - 4 divisions, κάθε ομάδα παίζει με όλες</span></div></div>
+        <div class="rule-item"><div class="rule-num">02</div><div class="rule-text">12 λεπτά μικτός χρόνος - 4 περίοδοι<span class="rule-sub">Κλασικό street rules, check ball, self-officiated</span></div></div>
+        <div class="rule-item"><div class="rule-num">03</div><div class="rule-text">3+1 παίκτες / ομάδα<span class="rule-sub">3 starters + 1 αλλαγή, όλα τα επίπεδα</span></div></div>
         <div class="rule-item"><div class="rule-num">04</div><div class="rule-text">Live Leaderboard<span class="rule-sub">Ανανεώνεται παρακάτω μετά από κάθε αγωνιστική</span></div></div>
       </div>
     </div>
@@ -579,13 +594,63 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
       </svg>
       <div class="entry-box reveal reveal-delay-3">
         <div class="entry-title">5&euro;<br>ανά παίκτη</div>
-        <div class="entry-sub">= 20&euro; ανά ομάδα / ανά αγώνα &middot; Τρόπαια &amp; αναμνηστικά για τους νικητές</div>
+        <div class="entry-sub">= 20&euro; ανά ομάδα / ανά αγώνα &middot; Τρόπαια &amp; έπαθλα για τους νικητές του F4</div>
       </div>
-      <!-- TOGGLE BUTTON -->
-      <button onclick="toggleLeague()" id="league-toggle-btn" style="margin-top:2px;width:100%;background:var(--dark3);border:none;padding:18px 24px;font-family:var(--font-cond);font-size:14px;font-weight:700;letter-spacing:3px;color:var(--orange);cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:space-between;">
-        <span>ΑΠΟΤΕΛΕΣΜΑΤΑ &amp; ΣΤΑΤΙΣΤΙΚΑ</span>
-        <span id="toggle-arrow" style="font-size:20px;transition:transform 0.3s;">&#8595;</span>
+      <!-- BUTTONS ROW -->
+      <div style="display:flex;gap:2px;margin-top:2px;">
+        <button onclick="toggleLeague()" id="league-toggle-btn" style="flex:1;background:var(--dark3);border:none;padding:18px 16px;font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--orange);cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:space-between;">
+          <span>Αποτελέσματα &amp; Στατιστικά</span>
+          <span id="toggle-arrow" style="font-size:20px;transition:transform 0.3s;">&#8595;</span>
+        </button>
+        <button onclick="toggleRegistration()" id="reg-btn" style="flex:1;background:var(--orange);border:none;padding:18px 16px;font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--dark);cursor:pointer;transition:background 0.2s;">
+          Εγγραφή Ομάδας &#8595;
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION FORM — hidden by default -->
+<section id="reg-section" style="display:none;background:var(--dark3);padding:60px 48px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <!-- CLOSED MESSAGE -->
+    <div id="reg-closed-msg" style="display:none;text-align:center;padding:40px;">
+      <div style="font-family:var(--font-display);font-size:48px;color:var(--orange);margin-bottom:16px;">Κλειστές</div>
+      <p style="font-family:var(--font-cond);font-size:18px;color:var(--gray);letter-spacing:1px;">Οι εγγραφές έχουν κλείσει για την τρέχουσα αγωνιστική περίοδο.</p>
+      <p style="font-family:var(--font-cond);font-size:15px;color:var(--gray);margin-top:8px;">Για πληροφορίες επικοινώνησε μαζί μας στο <strong style="color:var(--orange);">info@btheb.gr</strong></p>
+    </div>
+    <!-- OPEN FORM -->
+    <div id="reg-open-form">
+      <p class="section-label" style="margin-bottom:8px;">Εγγραφή Ομάδας</p>
+      <h3 style="font-family:var(--font-display);font-size:40px;color:var(--cream);margin-bottom:8px;line-height:1;">BtheB 3on3 League</h3>
+      <p style="font-family:var(--font-cond);font-size:14px;color:var(--gray);margin-bottom:32px;letter-spacing:1px;">Συμπλήρωσε τα στοιχεία για κάθε παίκτη. Ο αρχηγός είναι η επαφή της ομάδας.</p>
+
+      <!-- Όνομα ομάδας -->
+      <div style="margin-bottom:24px;">
+        <div class="f-grp" style="max-width:400px;">
+          <label class="f-lbl">Όνομα Ομάδας *</label>
+          <input class="r-input" id="reg-team-name" type="text" placeholder="Το όνομα της ομάδας σου">
+        </div>
+      </div>
+
+      <!-- Player tabs -->
+      <div style="display:flex;gap:2px;margin-bottom:2px;flex-wrap:wrap;">
+        <button class="reg-tab active" onclick="showRegTab(0)">Αρχηγός</button>
+        <button class="reg-tab" onclick="showRegTab(1)">Παίκτης 1</button>
+        <button class="reg-tab" onclick="showRegTab(2)">Παίκτης 2</button>
+        <button class="reg-tab" onclick="showRegTab(3)">Παίκτης 3</button>
+      </div>
+
+      <!-- Player panels — built by JS -->
+      <div id="reg-players"></div>
+
+      <button onclick="submitRegistration()" style="margin-top:24px;background:var(--orange);border:none;color:var(--dark);padding:16px 40px;font-family:var(--font-cond);font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:background 0.2s;">
+        Υποβολή Εγγραφής &rarr;
       </button>
+      <div id="reg-success" style="display:none;margin-top:16px;background:rgba(46,204,113,0.12);color:#2ECC71;padding:16px 20px;font-family:var(--font-cond);font-size:14px;letter-spacing:1px;">
+        &#10003; Η εγγραφή σας υποβλήθηκε! Θα επικοινωνήσουμε σύντομα για επιβεβαίωση.
+      </div>
+      <div id="reg-error" style="display:none;margin-top:16px;background:rgba(231,76,60,0.12);color:var(--red);padding:16px 20px;font-family:var(--font-cond);font-size:14px;letter-spacing:1px;"></div>
     </div>
   </div>
 </section>
@@ -626,7 +691,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
 
   <!-- STATS -->
   <div class="league-panel" id="panel-stats" style="padding:0 0 40px;">
-    <p class="section-label" style="margin-bottom:24px;">Top Σκόρερ</p>
+    <p class="section-label" style="margin-bottom:24px;">Top Σκόρερς</p>
     <div class="stats-grid" id="stats-grid">
       <!-- filled by JS -->
     </div>
@@ -642,7 +707,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
 <!-- CONTACT -->
 <section class="contact" id="contact">
   <p class="section-label reveal">Επικοινωνία</p>
-  <h2 class="section-title reveal reveal-delay-1">Στείλε<br>Μήνυμα</h2>
+  <h2 class="section-title reveal reveal-delay-1">Ξεκίνα<br>σήμερα</h2>
   <div class="contact-grid">
     <form class="contact-form reveal reveal-delay-2" onsubmit="handleForm(event)">
       <div class="form-group">
@@ -650,7 +715,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
         <input class="form-input" type="text" placeholder="Το όνομά σου" required>
       </div>
       <div class="form-group">
-        <label class="form-label">Τηλέφωνο</label>
+        <label class="form-label">Κινητό τηλέφωνο</label>
         <input class="form-input" type="tel" placeholder="69X XXX XXXX" required>
       </div>
       <div class="form-group">
@@ -660,7 +725,7 @@ footer { background: var(--dark); padding: 40px 48px; display: flex; justify-con
       <div class="form-group">
         <label class="form-label">Ενδιαφέρον</label>
         <select class="form-input">
-          <option value="">Επέλεξε...</option>
+          <option value="">Επίλεξε...</option>
           <option>Starter — 150&euro;/μήνα</option>
           <option>Premium — 300&euro;/μήνα</option>
           <option>Elite — 550&euro;/μήνα</option>
@@ -744,7 +809,7 @@ function showLeaguePanel(id) {
 // ── EMPTY STATE MESSAGE ──
 const emptyMsg = `
   <div style="padding:48px 24px;text-align:center;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:rgba(232,89,60,0.15);line-height:1;margin-bottom:16px;">BtheB</div>
+    <div style="font-family:'Oswald',sans-serif;font-size:64px;color:rgba(232,89,60,0.15);line-height:1;margin-bottom:16px;">BtheB</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;color:var(--orange);margin-bottom:12px;">Σύντομα</div>
     <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--gray);max-width:360px;margin:0 auto;line-height:1.7;">
       Το πρωτάθλημα ξεκινά σύντομα. Οι εγγραφές ομάδων είναι ανοιχτές — επικοινώνησε μαζί μας!
@@ -770,6 +835,81 @@ function renderStats() {
 function renderVideos() {
   const el = document.getElementById('video-grid');
   if (el) el.innerHTML = emptyMsg;
+}
+
+// ── REGISTRATION ──
+const playerLabels = ['Αρχηγός', 'Παίκτης 1', 'Παίκτης 2', 'Παίκτης 3'];
+const shirtSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+
+function buildRegPanels() {
+  const container = document.getElementById('reg-players');
+  if (!container) return;
+  container.innerHTML = playerLabels.map((label, i) => `
+    <div class="reg-panel ${i===0?'active':''}" id="reg-panel-${i}">
+      <div class="f-grp"><label class="f-lbl">Επίθετο *</label><input class="r-input" id="p${i}-lname" type="text" placeholder="Επίθετο"></div>
+      <div class="f-grp"><label class="f-lbl">Όνομα *</label><input class="r-input" id="p${i}-fname" type="text" placeholder="Όνομα"></div>
+      <div class="f-grp"><label class="f-lbl">Κινητό *${i===0?' (επαφή ομάδας)':''}</label>
+        <input class="r-input" id="p${i}-phone" type="tel" placeholder="69X XXX XXXX" pattern="69[0-9]{8}" maxlength="10"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+      <div class="f-grp"><label class="f-lbl">Email${i===0?' *':''}</label><input class="r-input" id="p${i}-email" type="email" placeholder="email@example.com"></div>
+      <div class="f-grp"><label class="f-lbl">Μέγεθος Φανέλας *</label>
+        <select class="r-input" id="p${i}-shirt">
+          <option value="">Επίλεξε μέγεθος...</option>
+          ${shirtSizes.map(s=>`<option>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>`).join('');
+}
+
+function showRegTab(idx) {
+  document.querySelectorAll('.reg-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.reg-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+function toggleRegistration() {
+  const isOpen = localStorage.getItem('btheb_reg_open') !== 'false';
+  const sec = document.getElementById('reg-section');
+  const closedMsg = document.getElementById('reg-closed-msg');
+  const openForm = document.getElementById('reg-open-form');
+  const isVisible = sec.style.display !== 'none';
+  if (isVisible) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  if (isOpen) { closedMsg.style.display='none'; openForm.style.display='block'; buildRegPanels(); }
+  else { closedMsg.style.display='block'; openForm.style.display='none'; }
+  sec.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function submitRegistration() {
+  const teamName = document.getElementById('reg-team-name').value.trim();
+  const errEl = document.getElementById('reg-error');
+  const sucEl = document.getElementById('reg-success');
+  errEl.style.display = 'none';
+  if (!teamName) { errEl.textContent = 'Συμπλήρωσε το όνομα της ομάδας.'; errEl.style.display='block'; return; }
+  // Validate captain (required)
+  const lname = document.getElementById('p0-lname').value.trim();
+  const fname = document.getElementById('p0-fname').value.trim();
+  const phone = document.getElementById('p0-phone').value.trim();
+  const email = document.getElementById('p0-email').value.trim();
+  const shirt = document.getElementById('p0-shirt').value;
+  if (!lname || !fname) { errEl.textContent = 'Συμπλήρωσε Επίθετο και Όνομα του Αρχηγού.'; errEl.style.display='block'; showRegTab(0); return; }
+  if (!phone || !/^69\d{8}$/.test(phone)) { errEl.textContent = 'Το κινητό του Αρχηγού πρέπει να ξεκινά με 69 και να έχει 10 ψηφία.'; errEl.style.display='block'; showRegTab(0); return; }
+  if (!email) { errEl.textContent = 'Συμπλήρωσε το email του Αρχηγού.'; errEl.style.display='block'; showRegTab(0); return; }
+  if (!shirt) { errEl.textContent = 'Επίλεξε μέγεθος φανέλας για τον Αρχηγό.'; errEl.style.display='block'; showRegTab(0); return; }
+  // Validate other players if partially filled
+  for (let i = 1; i <= 3; i++) {
+    const pl = document.getElementById(`p${i}-lname`).value.trim();
+    const pf = document.getElementById(`p${i}-fname`).value.trim();
+    const pp = document.getElementById(`p${i}-phone`).value.trim();
+    if ((pl || pf || pp) && pp && !/^69\d{8}$/.test(pp)) {
+      errEl.textContent = `Το κινητό του Παίκτη ${i} δεν είναι έγκυρο (πρέπει να ξεκινά με 69).`;
+      errEl.style.display = 'block'; showRegTab(i); return;
+    }
+  }
+  sucEl.style.display = 'block';
+  document.getElementById('reg-team-name').value = '';
+  document.querySelectorAll('#reg-players .r-input').forEach(el => { if(el.tagName==='INPUT') el.value=''; else el.selectedIndex=0; });
+  showRegTab(0);
 }
 
 // ── CONTACT FORM ──
