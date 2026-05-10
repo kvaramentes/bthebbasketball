@@ -278,6 +278,26 @@ select.r-input option { background:var(--dark3); }
   footer { flex-direction: column; gap: 16px; text-align: center; }
 }
 </style>
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBVAzwuSAZsQAQw3OKYdm3gRvnkQWF42dk",
+    authDomain: "btheb-academy.firebaseapp.com",
+    projectId: "btheb-academy",
+    storageBucket: "btheb-academy.firebasestorage.app",
+    messagingSenderId: "546227541301",
+    appId: "1:546227541301:web:3b8d83ddc322284221687c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  window._db = db;
+  window._fbAdd = addDoc;
+  window._fbCol = collection;
+</script>
 </head>
 <body>
 
@@ -880,43 +900,127 @@ function toggleRegistration() {
   sec.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-function submitRegistration() {
+async function submitRegistration() {
   const teamName = document.getElementById('reg-team-name').value.trim();
   const errEl = document.getElementById('reg-error');
   const sucEl = document.getElementById('reg-success');
+  const btn = document.querySelector('#reg-open-form button[onclick="submitRegistration()"]');
   errEl.style.display = 'none';
-  if (!teamName) { errEl.textContent = 'Συμπλήρωσε το όνομα της ομάδας.'; errEl.style.display='block'; return; }
-  // Validate captain (required)
-  const lname = document.getElementById('p0-lname').value.trim();
-  const fname = document.getElementById('p0-fname').value.trim();
-  const phone = document.getElementById('p0-phone').value.trim();
-  const email = document.getElementById('p0-email').value.trim();
-  const shirt = document.getElementById('p0-shirt').value;
-  if (!lname || !fname) { errEl.textContent = 'Συμπλήρωσε Επίθετο και Όνομα του Αρχηγού.'; errEl.style.display='block'; showRegTab(0); return; }
-  if (!phone || !/^69\d{8}$/.test(phone)) { errEl.textContent = 'Το κινητό του Αρχηγού πρέπει να ξεκινά με 69 και να έχει 10 ψηφία.'; errEl.style.display='block'; showRegTab(0); return; }
-  if (!email) { errEl.textContent = 'Συμπλήρωσε το email του Αρχηγού.'; errEl.style.display='block'; showRegTab(0); return; }
-  if (!shirt) { errEl.textContent = 'Επίλεξε μέγεθος φανέλας για τον Αρχηγό.'; errEl.style.display='block'; showRegTab(0); return; }
-  // Validate other players if partially filled
-  for (let i = 1; i <= 3; i++) {
-    const pl = document.getElementById(`p${i}-lname`).value.trim();
-    const pf = document.getElementById(`p${i}-fname`).value.trim();
-    const pp = document.getElementById(`p${i}-phone`).value.trim();
-    if ((pl || pf || pp) && pp && !/^69\d{8}$/.test(pp)) {
-      errEl.textContent = `Το κινητό του Παίκτη ${i} δεν είναι έγκυρο (πρέπει να ξεκινά με 69).`;
+  sucEl.style.display = 'none';
+
+  if (!teamName) {
+    errEl.textContent = 'Συμπλήρωσε το όνομα της ομάδας.';
+    errEl.style.display = 'block'; return;
+  }
+
+  // Validate ΟΛΑ τα πεδία ΟΛΩΝτων 4 παικτών
+  const roleNames = ['Αρχηγού', 'Παίκτη 1', 'Παίκτη 2', 'Παίκτη 3'];
+  const players = [];
+  for (let i = 0; i < 4; i++) {
+    const lname = document.getElementById(`p${i}-lname`).value.trim();
+    const fname = document.getElementById(`p${i}-fname`).value.trim();
+    const phone = document.getElementById(`p${i}-phone`).value.trim();
+    const email = document.getElementById(`p${i}-email`).value.trim();
+    const shirt = document.getElementById(`p${i}-shirt`).value;
+
+    if (!lname) {
+      errEl.textContent = `Συμπλήρωσε το Επίθετο ${roleNames[i]}.`;
       errEl.style.display = 'block'; showRegTab(i); return;
     }
+    if (!fname) {
+      errEl.textContent = `Συμπλήρωσε το Όνομα ${roleNames[i]}.`;
+      errEl.style.display = 'block'; showRegTab(i); return;
+    }
+    if (!phone || !/^69\d{8}$/.test(phone)) {
+      errEl.textContent = `Το κινητό ${roleNames[i]} πρέπει να ξεκινά με 69 και να έχει 10 ψηφία.`;
+      errEl.style.display = 'block'; showRegTab(i); return;
+    }
+    if (i === 0 && !email) {
+      errEl.textContent = 'Συμπλήρωσε το email του Αρχηγού.';
+      errEl.style.display = 'block'; showRegTab(0); return;
+    }
+    if (!shirt) {
+      errEl.textContent = `Επίλεξε μέγεθος φανέλας ${roleNames[i]}.`;
+      errEl.style.display = 'block'; showRegTab(i); return;
+    }
+    players.push({ role: playerLabels[i], lname, fname, phone, email, shirt });
   }
-  sucEl.style.display = 'block';
-  document.getElementById('reg-team-name').value = '';
-  document.querySelectorAll('#reg-players .r-input').forEach(el => { if(el.tagName==='INPUT') el.value=''; else el.selectedIndex=0; });
-  showRegTab(0);
+
+  if (btn) { btn.textContent = 'Αποστολή...'; btn.disabled = true; }
+
+  const regData = {
+    teamName, players,
+    status: 'pending',
+    division: '',
+    submittedAt: new Date().toISOString()
+  };
+
+  try {
+    // 1. Αποθήκευση στο Firebase Firestore
+    if (window._db && window._fbAdd && window._fbCol) {
+      await window._fbAdd(window._fbCol(window._db, 'registrations'), regData);
+    }
+
+    // 2. Email μέσω Formspree
+    const lines = players.map(p =>
+      `${p.role}: ${p.lname} ${p.fname} | Κιν: ${p.phone} | Email: ${p.email || '—'} | Φανέλα: ${p.shirt}`
+    ).join('\n');
+
+    const resp = await fetch('https://formspree.io/f/mnjwozdl', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        subject: `Νέα Εγγραφή Ομάδας: ${teamName}`,
+        message: `ΝΕΑ ΕΓΓΡΑΦΗ 3on3 LEAGUE\n\nΟμάδα: ${teamName}\nΗμ/νία: ${new Date().toLocaleString('el-GR')}\n\nΠΑΙΚΤΕΣ:\n${lines}`
+      })
+    });
+
+    if (resp.ok) {
+      sucEl.style.display = 'block';
+      document.getElementById('reg-team-name').value = '';
+      document.querySelectorAll('#reg-players .r-input').forEach(el => {
+        if (el.tagName === 'INPUT') el.value = ''; else el.selectedIndex = 0;
+      });
+      showRegTab(0);
+    } else {
+      errEl.textContent = 'Σφάλμα αποστολής. Παρακαλώ επικοινώνησε στο info@btheb.gr';
+      errEl.style.display = 'block';
+    }
+  } catch(e) {
+    errEl.textContent = 'Σφάλμα σύνδεσης. Παρακαλώ επικοινώνησε στο info@btheb.gr';
+    errEl.style.display = 'block';
+  } finally {
+    if (btn) { btn.textContent = 'Υποβολή Εγγραφής →'; btn.disabled = false; }
+  }
 }
 
-// ── CONTACT FORM ──
-function handleForm(e) {
+// ── CONTACT FORM (Formspree + Firebase) ──
+async function handleForm(e) {
   e.preventDefault();
-  document.getElementById('form-success').style.display = 'block';
-  e.target.reset();
+  const form = e.target;
+  const btn = form.querySelector('button[type="submit"]');
+  const sucEl = document.getElementById('form-success');
+  if (btn) { btn.textContent = 'Αποστολή...'; btn.disabled = true; }
+  try {
+    const data = new FormData(form);
+    // Αποθήκευση στο Firebase
+    if (window._db && window._fbAdd && window._fbCol) {
+      const obj = {};
+      data.forEach((v, k) => obj[k] = v);
+      obj.submittedAt = new Date().toISOString();
+      await window._fbAdd(window._fbCol(window._db, 'messages'), obj);
+    }
+    // Email μέσω Formspree
+    const resp = await fetch('https://formspree.io/f/mnjwozdl', {
+      method: 'POST', body: data, headers: { 'Accept': 'application/json' }
+    });
+    if (resp.ok) { sucEl.style.display = 'block'; form.reset(); }
+    else { alert('Σφάλμα αποστολής. Στείλε email στο info@btheb.gr'); }
+  } catch(err) {
+    alert('Σφάλμα σύνδεσης. Στείλε email στο info@btheb.gr');
+  } finally {
+    if (btn) { btn.textContent = 'Στείλε Μήνυμα →'; btn.disabled = false; }
+  }
 }
 
 // ── INIT ──

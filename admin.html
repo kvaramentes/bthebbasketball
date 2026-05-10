@@ -5,6 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BtheB Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyBVAzwuSAZsQAQw3OKYdm3gRvnkQWF42dk",
+    authDomain: "btheb-academy.firebaseapp.com",
+    projectId: "btheb-academy",
+    storageBucket: "btheb-academy.firebasestorage.app",
+    messagingSenderId: "546227541301",
+    appId: "1:546227541301:web:3b8d83ddc322284221687c"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  window._db = db;
+  window._fbCol = collection;
+  window._fbDocs = getDocs;
+  window._fbDoc = doc;
+  window._fbUpdate = updateDoc;
+  window._fbDelete = deleteDoc;
+  window._fbAdd = addDoc;
+
+  window.loadFirebaseRegistrations = async function() {
+    try {
+      const snap = await getDocs(query(collection(db,'registrations'), orderBy('submittedAt','desc')));
+      window._firebaseRegs = snap.docs.map(d => ({ _fid: d.id, ...d.data() }));
+      if (typeof renderRegistrationsTable === 'function') renderRegistrationsTable();
+    } catch(e) { console.log('FB regs:', e); }
+  };
+  window.loadFirebaseMessages = async function() {
+    try {
+      const snap = await getDocs(query(collection(db,'messages'), orderBy('submittedAt','desc')));
+      window._firebaseMsgs = snap.docs.map(d => ({ _fid: d.id, ...d.data() }));
+    } catch(e) { console.log('FB msgs:', e); }
+  };
+</script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -476,6 +512,9 @@ function loadAll() {
   renderRegistrationsTable();
   refreshTeamSelects();
   updateRegStatus();
+  // Φόρτωσε εγγραφές από Firebase
+  if (window.loadFirebaseRegistrations) window.loadFirebaseRegistrations();
+  if (window.loadFirebaseMessages) window.loadFirebaseMessages();
 }
 
 // ── TEAMS ──
@@ -605,30 +644,73 @@ function updateRegStatus(id, val) {
   const r = regs.find(r => r.id === id);
   if (r) { r.status = val; setData('registrations', regs); }
 }
+async function updateFirebaseReg(fid, field, value) {
+  if (!window._db || !fid) return;
+  try {
+    await window._fbUpdate(window._fbDoc(window._db, 'registrations', fid), { [field]: value });
+  } catch(e) { console.log('Update error:', e); }
+}
+async function deleteFirebaseReg(fid) {
+  if (!window._db || !fid) return;
+  try {
+    await window._fbDelete(window._fbDoc(window._db, 'registrations', fid));
+    window._firebaseRegs = (window._firebaseRegs || []).filter(r => r._fid !== fid);
+    renderRegistrationsTable();
+  } catch(e) { console.log('Delete error:', e); }
+}
+
 function renderRegistrationsTable() {
-  const regs = getData('registrations', []);
-  const statusLabel = { pending: '⏳ Αναμονή', confirmed: '✓ Επιβεβαιωμένη', rejected: '✗ Απορρίφθηκε' };
   const statusColor = { pending: '#F39C12', confirmed: '#2ECC71', rejected: '#E74C3C' };
-  document.getElementById('registrations-table').innerHTML = regs.length
-    ? regs.map(r => `<tr>
-        <td style="font-weight:600;">${r.tname}</td>
+  // Συνδύασε Firebase + localStorage
+  const fbRegs = (window._firebaseRegs || []).map(r => ({
+    _fid: r._fid,
+    tname: r.teamName || r.tname || '—',
+    captain: r.players && r.players[0] ? `${r.players[0].lname} ${r.players[0].fname}` : (r.captain || '—'),
+    phone: r.players && r.players[0] ? r.players[0].phone : (r.phone || '—'),
+    div: r.division || r.div || '',
+    status: r.status || 'pending',
+    submittedAt: r.submittedAt || '',
+    fromFirebase: true,
+    players: r.players || []
+  }));
+  const localRegs = getData('registrations', []).map(r => ({ ...r, fromFirebase: false }));
+  const allRegs = [...fbRegs, ...localRegs];
+
+  document.getElementById('registrations-table').innerHTML = allRegs.length
+    ? allRegs.map(r => `<tr>
+        <td style="font-weight:600;">${r.tname}<br><small style="color:var(--gray);font-size:11px;">${r.submittedAt ? new Date(r.submittedAt).toLocaleString('el-GR') : ''}</small></td>
         <td>${r.captain}</td>
         <td>${r.phone}</td>
         <td>
-          <select onchange="updateRegDiv(${r.id},this.value)" style="background:var(--dark2);border:1px solid rgba(255,255,255,0.1);color:var(--cream);padding:4px 8px;font-family:var(--font-c);font-size:13px;cursor:pointer;">
+          <select onchange="${r.fromFirebase ? `updateFirebaseReg('${r._fid}','division',this.value)` : `updateRegDiv(${r.id},this.value)`}"
+            style="background:var(--dark2);border:1px solid rgba(255,255,255,0.1);color:var(--cream);padding:4px 8px;font-family:var(--font-c);font-size:13px;cursor:pointer;">
+            <option value="">— Χωρίς Division —</option>
             ${['Division A','Division B','Division C','Division D'].map(d=>`<option ${r.div===d?'selected':''}>${d}</option>`).join('')}
           </select>
         </td>
         <td>
-          <select onchange="updateRegStatus(${r.id},this.value)" style="background:var(--dark2);border:1px solid rgba(255,255,255,0.1);color:${statusColor[r.status]||'#aaa'};padding:4px 8px;font-family:var(--font-c);font-size:13px;cursor:pointer;">
+          <select onchange="${r.fromFirebase ? `updateFirebaseReg('${r._fid}','status',this.value)` : `updateRegStatus(${r.id},this.value)`}"
+            style="background:var(--dark2);border:1px solid rgba(255,255,255,0.1);color:${statusColor[r.status]||'#aaa'};padding:4px 8px;font-family:var(--font-c);font-size:13px;cursor:pointer;">
             <option value="pending" ${r.status==='pending'?'selected':''}>⏳ Αναμονή</option>
             <option value="confirmed" ${r.status==='confirmed'?'selected':''}>✓ Επιβεβαιωμένη</option>
             <option value="rejected" ${r.status==='rejected'?'selected':''}>✗ Απορρίφθηκε</option>
           </select>
         </td>
-        <td class="actions"><button class="btn btn-danger btn-sm" onclick="deleteRegistration(${r.id})">Διαγραφή</button></td>
+        <td class="actions">
+          ${r.players && r.players.length ? `<button class="btn btn-sm" style="background:var(--dark2);color:var(--cream);" onclick="showRegPlayers('${r._fid||r.id}')">Παίκτες</button>` : ''}
+          <button class="btn btn-danger btn-sm" onclick="${r.fromFirebase ? `deleteFirebaseReg('${r._fid}')` : `deleteRegistration(${r.id})`}">Διαγραφή</button>
+        </td>
       </tr>`).join('')
     : '<tr><td colspan="6" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν εγγραφές ακόμα.</td></tr>';
+}
+
+function showRegPlayers(id) {
+  const reg = (window._firebaseRegs || []).find(r => r._fid === id);
+  if (!reg || !reg.players) return;
+  const lines = reg.players.map(p =>
+    `${p.role}: ${p.lname} ${p.fname} | Κιν: ${p.phone} | Email: ${p.email||'—'} | Φανέλα: ${p.shirt}`
+  ).join('\n');
+  alert(`Ομάδα: ${reg.teamName}\n\n${lines}`);
 }
 
 // ── SCHEDULE ──
