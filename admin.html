@@ -669,7 +669,76 @@ async function updateFirebaseReg(fid, field, value) {
   if (!window._db || !fid) return;
   try {
     await window._fbUpdate(window._fbDoc(window._db, 'registrations', fid), { [field]: value });
-  } catch(e) { console.log('Update error:', e); }
+
+    // Αν έγινε "confirmed" → δημιούργησε αυτόματα ομάδα + αθλητές
+    if (field === 'status' && value === 'confirmed') {
+      await autoCreateTeamAndPlayers(fid);
+    }
+    // Αν άλλαξε division → ενημέρωσε και την ομάδα αν υπάρχει
+    if (field === 'division') {
+      const reg = (window._firebaseRegs || []).find(r => r._fid === fid);
+      if (reg) {
+        const teams = getData('teams', []);
+        const team = teams.find(t => t.name === (reg.teamName || reg.tname));
+        if (team) { team.season = value; setData('teams', teams); renderTeamsTable(); }
+      }
+    }
+    // Ανανέωσε local cache
+    if (window._firebaseRegs) {
+      const r = window._firebaseRegs.find(r => r._fid === fid);
+      if (r) r[field] = value;
+    }
+    renderRegistrationsTable();
+  } catch(e) { console.log('Update error:', e); alert('Σφάλμα ενημέρωσης: ' + e.message); }
+}
+
+async function autoCreateTeamAndPlayers(fid) {
+  const reg = (window._firebaseRegs || []).find(r => r._fid === fid);
+  if (!reg) return;
+
+  const teamName = reg.teamName || reg.tname || '—';
+  const division = reg.division || reg.div || 'Division A';
+  const players  = reg.players || [];
+
+  // Έλεγξε αν η ομάδα υπάρχει ήδη
+  const teams = getData('teams', []);
+  if (teams.find(t => t.name === teamName)) {
+    showFb(document.getElementById('fb-reg-admin') || document.createElement('div'),
+      `ℹ️ Η ομάδα "${teamName}" υπάρχει ήδη — δεν δημιουργήθηκε ξανά.`, true);
+    return;
+  }
+
+  // Δημιούργησε ομάδα
+  const newTeam = { id: Date.now(), name: teamName, color: '#E8593C', season: division, w: 0, l: 0 };
+  teams.push(newTeam);
+  setData('teams', teams);
+
+  // Δημιούργησε αθλητές
+  const existingPlayers = getData('players', []);
+  players.forEach((p, i) => {
+    existingPlayers.push({
+      id: Date.now() + i + 1,
+      name: `${p.lname} ${p.fname}`,
+      team: teamName,
+      num: '—',
+      ppg: 0, apg: 0, rpg: 0,
+      phone: p.phone || '',
+      email: p.email || '',
+      shirt: p.shirt || '',
+      role: p.role || ''
+    });
+  });
+  setData('players', existingPlayers);
+
+  // Ανανέωσε UI
+  renderTeamsTable();
+  renderPlayersTable();
+  refreshTeamSelects();
+  renderDashboard();
+
+  // Εμφάνισε επιβεβαίωση
+  const msg = `✓ Η ομάδα "${teamName}" και ${players.length} αθλητές δημιουργήθηκαν αυτόματα στο Division: ${division}!`;
+  alert(msg);
 }
 async function deleteFirebaseReg(fid) {
   if (!window._db || !fid) return;
