@@ -40,6 +40,15 @@
       window._firebaseMsgs = snap.docs.map(d => ({ _fid: d.id, ...d.data() }));
     } catch(e) { console.log('FB msgs:', e); }
   };
+
+  // Σημείωσε ότι το Firebase είναι έτοιμο
+  window._firebaseReady = true;
+  // Αν ο χρήστης έχει ήδη κάνει login (π.χ. refresh), φόρτωσε αμέσως
+  if (document.getElementById('admin-shell') &&
+      document.getElementById('admin-shell').style.display === 'block') {
+    window.loadFirebaseRegistrations();
+    window.loadFirebaseMessages();
+  }
 </script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -306,7 +315,12 @@ textarea.f-input { resize: vertical; min-height: 90px; }
     <!-- REGISTRATIONS -->
     <div class="panel" id="panel-registrations">
       <div class="panel-title">Εγγραφές Ομάδων</div>
-      <div class="panel-sub">Αιτήσεις 3on3 League — Ανάθεση Ομίλου</div>
+      <div class="panel-sub">Αιτήσεις 3on3 League — Ανάθεση Ομίλου &nbsp;
+        <button onclick="if(window.loadFirebaseRegistrations) window.loadFirebaseRegistrations()" 
+          style="background:var(--orange);border:none;color:var(--dark);padding:4px 14px;font-family:var(--font-c);font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;vertical-align:middle;">
+          ↻ Ανανέωση από Firebase
+        </button>
+      </div>
       <div class="card">
         <div class="card-title">Εισαγωγή Εγγραφής (χειροκίνητα)</div>
         <p style="font-family:var(--font-b);font-size:14px;color:var(--gray);margin-bottom:16px;">Όταν λάβεις αίτηση εγγραφής (email ή φόρμα), την καταχωρείς εδώ και αναθέτεις Division.</p>
@@ -471,6 +485,16 @@ function doLogin() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-shell').style.display = 'block';
     loadAll();
+    // Φόρτωσε Firebase δεδομένα — περίμενε να είναι έτοιμο
+    const tryFirebase = () => {
+      if (window.loadFirebaseRegistrations) {
+        window.loadFirebaseRegistrations();
+        window.loadFirebaseMessages();
+      } else {
+        setTimeout(tryFirebase, 300);
+      }
+    };
+    setTimeout(tryFirebase, 500);
   } else {
     err.style.display = 'block';
     document.getElementById('pw-input').value = '';
@@ -512,9 +536,6 @@ function loadAll() {
   renderRegistrationsTable();
   refreshTeamSelects();
   updateRegStatus();
-  // Φόρτωσε εγγραφές από Firebase
-  if (window.loadFirebaseRegistrations) window.loadFirebaseRegistrations();
-  if (window.loadFirebaseMessages) window.loadFirebaseMessages();
 }
 
 // ── TEAMS ──
