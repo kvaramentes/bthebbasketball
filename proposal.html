@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BtheB Basketball Academy- Πρόταση Χορηγίας</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --orange: #E8593C; --dark: #0D0D0D; --dark2: #141414; --cream: #F2EDE4;
+        --font-display: 'Bebas Neue', sans-serif; --font-cond: 'Barlow Condensed', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--dark); color: var(--cream); font-family: 'Barlow', sans-serif; line-height: 1.6; }
+    
+    /* Pages for PDF */
+    .page { 
+        min-height: 100vh; 
+        padding: 80px; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center;
+        border-bottom: 2px solid var(--dark2);
+        page-break-after: always;
+    }
+
+    /* Cover Page */
+    .cover { text-align: center; background: linear-gradient(rgba(13,13,13,0.85), rgba(13,13,13,0.85)), url('https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=1000'); background-size: cover; background-position: center; }
+    .cover h1 { font-family: var(--font-display); font-size: 8rem; color: var(--orange); line-height: 1; margin-bottom: 10px; }
+    .cover h2 { font-family: var(--font-cond); font-size: 2.2rem; letter-spacing: 3px; }
+    .orange-line { width: 80px; height: 4px; background: var(--orange); margin: 30px auto; }
+
+    /* Typography */
+    h3 { font-family: var(--font-display); font-size: 3.5rem; color: var(--orange); margin-bottom: 25px; }
+    
+    /* Vision Section - Full Justify */
+    .vision-text { 
+        font-size: 1.3rem; 
+        max-width: 900px; 
+        opacity: 0.9; 
+        text-align: justify; 
+        text-justify: inter-word;
+    }
+
+    /* Grid for Stats & Packages */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 50px; }
+    .stat-card { background: var(--dark2); padding: 40px; border-top: 4px solid var(--orange); text-align: center; }
+    .stat-num { display: block; font-family: var(--font-display); font-size: 4.5rem; color: var(--orange); line-height: 1; }
+    .stat-label { font-family: var(--font-cond); font-size: 1.3rem; font-weight: 600; margin-top: 10px; }
+
+    /* Packages */
+    .package { background: var(--dark2); padding: 35px; border: 1px solid #222; position: relative; }
+    .package.featured { border: 2px solid var(--orange); transform: scale(1.03); z-index: 2; }
+    .package h4 { font-family: var(--font-display); font-size: 2.8rem; margin-bottom: 15px; color: var(--cream); }
+    .price { font-family: var(--font-cond); font-size: 1.8rem; color: var(--orange); display: block; margin-bottom: 25px; font-weight: 700; }
+    .list { list-style: none; }
+    .list li { margin-bottom: 12px; font-size: 1.05rem; display: flex; align-items: flex-start; }
+    .list li::before { content: '✓'; color: var(--orange); margin-right: 12px; font-weight: bold; }
+
+    /* Footer - New Layout */
+    .footer-container {
+        margin-top: auto;
+        padding-top: 40px;
+        border-top: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .footer-brand {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        color: var(--orange);
+    }
+    .footer-info {
+        display: flex;
+        gap: 20px;
+        font-family: var(--font-cond);
+        font-size: 1.1rem;
+        color: var(--cream);
+        opacity: 0.8;
+    }
+    .info-item { display: flex; align-items: center; gap: 8px; }
+
+    @media print {
+        .page { border: none; }
+        .cover { background: var(--dark) !important; -webkit-print-color-adjust: exact; }
+        .footer-container { border-top: 1px solid #222; }
+    }
+</style>
+</head>
+<body>
+
+    <div class="page cover">
+        <h1>BtheB</h1>
+        <h2>Basketball Academy & 3on3 League</h2>
+        <div class="orange-line"></div>
+        <p style="font-family: var(--font-cond); letter-spacing: 2px; font-size: 1.2rem;">Sponsorship Proposal 2026 - 2027</p>
+        <p style="margin-top: 15px; font-style: italic; opacity: 0.7;">Γίνε ο MVP της τοπικής κοινωνίας</p>
+    </div>
+
+    <div class="page">
+        <h3>Το όραμά μας</h3>
+        <div class="vision-text">
+            <p>Η BtheB Basketball Academy δεν είναι απλά μια σχολή μπάσκετ στο Περιστέρι. Είναι ένας κόμβος όπου η αθλητική πειθαρχία συναντά την τεχνολογία των Analytics. Δεν αντικαθιστούμε τα σωματεία αλλά τα συμπληρώνουμε. Δημιουργούμε ένα περιβάλλον επαγγελματικών προδιαγραφών για παιδιά και ενήλικες, προσφέροντας στους συνεργάτες μας κάτι μοναδικό: την απόλυτη σύνδεση με την τοπική κοινότητα μέσα από την καινοτομία και το πάθος για το παιχνίδι.</p>
+            <p style="margin-top: 25px;">Η παρουσία σας στο BtheB εξασφαλίζει ότι το brand σας δεν θα είναι απλώς θεατής, αλλά ο έκτος παίκτης σε μια προσπάθεια που αγκαλιάζει ολόκληρη την πόλη.</p>
+        </div>
+        
+        <div class="grid">
+            <div class="stat-card">
+                <span class="stat-num">100+</span>
+                <span class="stat-label">Ενεργοί αθλητές</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">300+</span>
+                <span class="stat-label">Μέλη κοινότητας</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">15K</span>
+                <span class="stat-label">Views στο btheb.gr</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <h3 style="text-align: center; margin-bottom: 50px;">Επενδυτικά πακέτα</h3>
+        <div class="grid">
+            <div class="package">
+                <h4>6th Man</h4>
+                <span class="price">500€</span>
+                <ul class="list">
+                    <li>Παρουσία στο Partner Directory</li>
+                    <li>Social Media Shout-out</li>
+                    <li>Banner στους κοινόχρηστους χώρους</li>
+                </ul>
+            </div>
+            <div class="package featured">
+                <div style="background: var(--orange); color: white; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); padding: 5px 15px; font-family: var(--font-cond); font-weight: bold; font-size: 0.8rem; border-radius: 2px;">MVP Choice</div>
+                <h4>Franchise</h4>
+                <span class="price">2.000€</span>
+                <ul class="list">
+                    <li>Naming Rights του Πρωταθλήματος</li>
+                    <li>Logo στην Επίσημη Φανέλα</li>
+                    <li>Premium Branding στο Header του Site</li>
+                    <li>2 Κεντρικά Banners στο Γήπεδο</li>
+                </ul>
+            </div>
+            <div class="package">
+                <h4>All-Star</h4>
+                <span class="price">1000€</span>
+                <ul class="list">
+                    <li>Stat Sponsorship (Δίπλα στα Σκορ)</li>
+                    <li>Social Media Series "Powered by"</li>
+                    <li>Sideline Banner στο Γήπεδο</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+            <h3 style="font-size: 4rem;">Ας παίξουμε μαζί</h3>
+            <p style="margin: 0 auto; font-size: 1.4rem; opacity: 0.8; max-width: 600px;">Είμαστε έτοιμοι να προσαρμόσουμε την πρότασή μας στις ανάγκες της δικής σας επιχείρησης.</p>
+        </div>
+
+        <div class="footer-container">
+            <div class="footer-brand">BtheB Basketball Academy</div>
+            <div class="footer-info">
+                <div class="info-item"><span>📞</span> +30 693 732 7661</div>
+                <div class="info-item"><span>|</span></div>
+                <div class="info-item"><span>✉</span> info@btheb.gr</div>
+                <div class="info-item"><span>|</span></div>
+                <div class="info-item"><span>🌐</span> www.btheb.gr</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
