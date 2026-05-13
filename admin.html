@@ -9,6 +9,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBVAzwuSAZsQAQw3OKYdm3gRvnkQWF42dk",
@@ -21,9 +22,11 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   // Expose Firebase functions globally
   window._db = db;
+  window._auth = auth;
   window._fbCol = collection;
   window._fbDocs = getDocs;
   window._fbDoc = doc;
@@ -31,6 +34,50 @@
   window._fbDelete = deleteDoc;
   window._fbAdd = addDoc;
   window._fbSet = setDoc;
+
+  // ── Firebase Auth login/logout ──
+  window.doFirebaseLogin = async function(email, password) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged θα χειριστεί το υπόλοιπο
+    } catch(e) {
+      let msg = 'Σφάλμα σύνδεσης.';
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found') msg = 'Λάθος email ή κωδικός.';
+      else if (e.code === 'auth/too-many-requests') msg = 'Πολλές αποτυχημένες προσπάθειες. Δοκίμασε αργότερα.';
+      document.getElementById('login-err').textContent = msg;
+      document.getElementById('login-err').style.display = 'block';
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-input').focus();
+    }
+  };
+
+  window.doFirebaseLogout = async function() {
+    await signOut(auth);
+  };
+
+  // Παρακολούθηση auth state
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Logged in
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-shell').style.display = 'block';
+      document.getElementById('user-email').textContent = user.email;
+      loadAll();
+      const tryFirebase = () => {
+        if (window.loadFirebaseRegistrations) {
+          window.loadFirebaseRegistrations();
+          window.loadFirebaseMessages();
+        } else { setTimeout(tryFirebase, 300); }
+      };
+      setTimeout(tryFirebase, 500);
+    } else {
+      // Logged out
+      document.getElementById('admin-shell').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('email-input').value = '';
+      document.getElementById('pw-input').value = '';
+    }
+  });
 
   // ── LOAD ALL FROM FIREBASE ──
   window.loadAllFromFirebase = async function() {
@@ -198,10 +245,12 @@ textarea.f-input { resize: vertical; min-height: 90px; }
   <div class="login-box">
     <div class="login-logo">BtheB</div>
     <div class="login-sub">Admin Panel</div>
+    <label class="login-label">Email</label>
+    <input class="login-input" type="email" id="email-input" placeholder="admin@btheb.gr" onkeydown="if(event.key==='Enter')doLogin()">
     <label class="login-label">Κωδικός Πρόσβασης</label>
     <input class="login-input" type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Είσοδος</button>
-    <div class="login-err" id="login-err">Λάθος κωδικός. Ξαναπροσπάθησε.</div>
+    <div class="login-err" id="login-err">Λάθος email ή κωδικός.</div>
   </div>
 </div>
 
@@ -217,7 +266,7 @@ textarea.f-input { resize: vertical; min-height: 90px; }
     <button class="nav-tab" onclick="showPanel('schedule')">Πρόγραμμα</button>
     <button class="nav-tab" onclick="showPanel('media')">Βίντεο & Media</button>
     <button class="nav-tab" onclick="showPanel('settings')">Ρυθμίσεις</button>
-    <button class="logout-btn" onclick="doLogout()">Έξοδος</button>
+    <button class="logout-btn" onclick="doLogout()">Έξοδος <span id="user-email" style="opacity:0.6;font-size:10px;margin-left:6px;"></span></button>
   </nav>
   <div id="fb-loading" style="display:none;background:var(--orange);color:var(--dark);padding:8px 32px;font-family:var(--font-c);font-size:13px;font-weight:700;letter-spacing:2px;text-align:center;position:sticky;top:64px;z-index:99;"></div>
 
@@ -481,12 +530,12 @@ textarea.f-input { resize: vertical; min-height: 90px; }
         <div class="feedback" id="fb-reg"></div>
       </div>
         <div class="form-row cols-2">
-          <div class="f-group"><label class="f-label">Νέος Κωδικός</label><input class="f-input" id="new-pw" type="password" placeholder="Νέος κωδικός"></div>
-          <div class="f-group"><label class="f-label">Επαλήθευση</label><input class="f-input" id="new-pw2" type="password" placeholder="Επανάληψη κωδικού"></div>
+          <div class="f-group"><label class="f-label">Αλλαγή κωδικού</label>
+            <p style="font-family:var(--font-b);font-size:14px;color:#aaa;margin-top:8px;">Η αλλαγή κωδικού γίνεται μέσω του <strong style="color:var(--orange);">Firebase Console → Authentication → Users</strong>. Κάνε κλικ στον χρήστη σου και επίλεξε "Reset password".</p>
+          </div>
         </div>
-        <button class="btn btn-primary" onclick="changePw()">Αποθήκευση Κωδικού</button>
+        <button class="btn btn-primary" onclick="window.open('https://console.firebase.google.com/project/btheb-academy/authentication/users','_blank')">Άνοιξε Firebase Console</button>
         <div class="feedback" id="fb-pw"></div>
-        <p class="pw-hint" style="margin-top:16px;">Ο κωδικός αποθηκεύεται στον browser σου. Χρησιμοποίησε διαφορετικό device; Θα χρειαστείς τον αρχικό κωδικό: <strong>θυμήσου...Km*********</strong></p>
       </div>
       <div class="card">
         <div class="card-title">Εξαγωγή Δεδομένων</div>
@@ -510,51 +559,27 @@ textarea.f-input { resize: vertical; min-height: 90px; }
 
 <script>
 // ══════════════════════════════════════════
-// PASSWORD (stored in localStorage)
-// Change default here or via the Settings panel
+// AUTH — Firebase Authentication
+// Κανένα password στον κώδικα!
 // ══════════════════════════════════════════
-const DEFAULT_PW = 'Km!31i9s!@#';
-
-function getPw() { return localStorage.getItem('btheb_admin_pw') || DEFAULT_PW; }
-
 function doLogin() {
-  const val = document.getElementById('pw-input').value;
-  const err = document.getElementById('login-err');
-  if (val === getPw()) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-shell').style.display = 'block';
-    loadAll();
-    // Φόρτωσε Firebase δεδομένα — περίμενε να είναι έτοιμο
-    const tryFirebase = () => {
-      if (window.loadFirebaseRegistrations) {
-        window.loadFirebaseRegistrations();
-        window.loadFirebaseMessages();
-      } else {
-        setTimeout(tryFirebase, 300);
-      }
-    };
-    setTimeout(tryFirebase, 500);
+  const email = document.getElementById('email-input').value.trim();
+  const pw    = document.getElementById('pw-input').value;
+  const err   = document.getElementById('login-err');
+  err.style.display = 'none';
+  if (!email || !pw) { err.textContent = 'Συμπλήρωσε email και κωδικό.'; err.style.display = 'block'; return; }
+  if (window.doFirebaseLogin) {
+    window.doFirebaseLogin(email, pw);
   } else {
-    err.style.display = 'block';
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
+    setTimeout(() => window.doFirebaseLogin && window.doFirebaseLogin(email, pw), 500);
   }
 }
 function doLogout() {
-  document.getElementById('admin-shell').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('pw-input').value = '';
+  if (window.doFirebaseLogout) window.doFirebaseLogout();
 }
 function changePw() {
-  const p1 = document.getElementById('new-pw').value;
-  const p2 = document.getElementById('new-pw2').value;
   const fb = document.getElementById('fb-pw');
-  if (!p1 || p1.length < 6) return showFb(fb, 'Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.', false);
-  if (p1 !== p2) return showFb(fb, 'Οι κωδικοί δεν ταιριάζουν.', false);
-  localStorage.setItem('btheb_admin_pw', p1);
-  showFb(fb, '✓ Κωδικός αποθηκεύτηκε!', true);
-  document.getElementById('new-pw').value = '';
-  document.getElementById('new-pw2').value = '';
+  showFb(fb, 'Για αλλαγή κωδικού: Firebase Console → Authentication → Users → Reset password.', false);
 }
 
 // ══════════════════════════════════════════
@@ -1092,8 +1117,8 @@ function updateRegStatus() {
   }
 }
 
-// Focus password field on load
-document.getElementById('pw-input').focus();
+// Focus email field on load
+document.getElementById('email-input').focus();
 </script>
 </body>
 </html>
