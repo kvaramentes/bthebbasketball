@@ -8,7 +8,8 @@
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, setDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
   const firebaseConfig = {
     apiKey: "AIzaSyBVAzwuSAZsQAQw3OKYdm3gRvnkQWF42dk",
     authDomain: "btheb-academy.firebaseapp.com",
@@ -17,8 +18,11 @@
     messagingSenderId: "546227541301",
     appId: "1:546227541301:web:3b8d83ddc322284221687c"
   };
+
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
+  // Expose Firebase functions globally
   window._db = db;
   window._fbCol = collection;
   window._fbDocs = getDocs;
@@ -26,14 +30,55 @@
   window._fbUpdate = updateDoc;
   window._fbDelete = deleteDoc;
   window._fbAdd = addDoc;
+  window._fbSet = setDoc;
+
+  // ── LOAD ALL FROM FIREBASE ──
+  window.loadAllFromFirebase = async function() {
+    const showLoading = (msg) => {
+      const el = document.getElementById('fb-loading');
+      if (el) { el.textContent = msg; el.style.display = 'block'; }
+    };
+    const hideLoading = () => {
+      const el = document.getElementById('fb-loading');
+      if (el) el.style.display = 'none';
+    };
+
+    showLoading('Φόρτωση δεδομένων από Firebase...');
+    try {
+      const cols = ['teams','players','results','schedule','videos','registrations','messages'];
+      const data = {};
+      await Promise.all(cols.map(async c => {
+        try {
+          const snap = await getDocs(collection(db, c));
+          data[c] = snap.docs.map(d => ({ _fid: d.id, ...d.data() }));
+        } catch(e) { data[c] = []; }
+      }));
+
+      // Store in window cache
+      window._fbCache = data;
+      window._firebaseRegs = data.registrations || [];
+      window._firebaseMsgs = data.messages || [];
+
+      // Render all
+      if (typeof renderAllFromCache === 'function') renderAllFromCache();
+      showLoading('✓ Όλα τα δεδομένα φορτώθηκαν!');
+      setTimeout(hideLoading, 2000);
+    } catch(e) {
+      showLoading('✗ Σφάλμα φόρτωσης: ' + e.message);
+      setTimeout(hideLoading, 3000);
+    }
+  };
 
   window.loadFirebaseRegistrations = async function() {
     try {
       const snap = await getDocs(query(collection(db,'registrations'), orderBy('submittedAt','desc')));
       window._firebaseRegs = snap.docs.map(d => ({ _fid: d.id, ...d.data() }));
+      if (!window._fbCache) window._fbCache = {};
+      window._fbCache.registrations = window._firebaseRegs;
       if (typeof renderRegistrationsTable === 'function') renderRegistrationsTable();
     } catch(e) { console.log('FB regs:', e); }
   };
+
   window.loadFirebaseMessages = async function() {
     try {
       const snap = await getDocs(query(collection(db,'messages'), orderBy('submittedAt','desc')));
@@ -41,14 +86,7 @@
     } catch(e) { console.log('FB msgs:', e); }
   };
 
-  // Σημείωσε ότι το Firebase είναι έτοιμο
   window._firebaseReady = true;
-  // Αν ο χρήστης έχει ήδη κάνει login (π.χ. refresh), φόρτωσε αμέσως
-  if (document.getElementById('admin-shell') &&
-      document.getElementById('admin-shell').style.display === 'block') {
-    window.loadFirebaseRegistrations();
-    window.loadFirebaseMessages();
-  }
 </script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -181,6 +219,7 @@ textarea.f-input { resize: vertical; min-height: 90px; }
     <button class="nav-tab" onclick="showPanel('settings')">Ρυθμίσεις</button>
     <button class="logout-btn" onclick="doLogout()">Έξοδος</button>
   </nav>
+  <div id="fb-loading" style="display:none;background:var(--orange);color:var(--dark);padding:8px 32px;font-family:var(--font-c);font-size:13px;font-weight:700;letter-spacing:2px;text-align:center;position:sticky;top:64px;z-index:99;"></div>
 
   <div class="admin-content">
 
@@ -316,9 +355,9 @@ textarea.f-input { resize: vertical; min-height: 90px; }
     <div class="panel" id="panel-registrations">
       <div class="panel-title">Εγγραφές Ομάδων</div>
       <div class="panel-sub">Αιτήσεις 3on3 League — Ανάθεση Ομίλου &nbsp;
-        <button onclick="if(window.loadFirebaseRegistrations) window.loadFirebaseRegistrations()" 
+        <button onclick="if(window.loadAllFromFirebase) window.loadAllFromFirebase()"
           style="background:var(--orange);border:none;color:var(--dark);padding:4px 14px;font-family:var(--font-c);font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;vertical-align:middle;">
-          ↻ Ανανέωση από Firebase
+          ↻ Ανανέωση όλων από Firebase
         </button>
       </div>
       <div class="card">
@@ -519,12 +558,61 @@ function changePw() {
 }
 
 // ══════════════════════════════════════════
-// DATA LAYER (localStorage)
+// DATA LAYER — Firebase πρώτα, localStorage backup
 // ══════════════════════════════════════════
 function getData(key, def) {
+  // Πρώτα από Firebase cache, μετά localStorage
+  if (window._fbCache && window._fbCache[key]) return window._fbCache[key];
   try { return JSON.parse(localStorage.getItem('btheb_' + key)) || def; } catch { return def; }
 }
-function setData(key, val) { localStorage.setItem('btheb_' + key, JSON.stringify(val)); }
+function setData(key, val) {
+  // Αποθήκευση και στο cache και στο localStorage (backup)
+  if (!window._fbCache) window._fbCache = {};
+  window._fbCache[key] = val;
+  localStorage.setItem('btheb_' + key, JSON.stringify(val));
+  // Sync στο Firebase async
+  syncCollectionToFirebase(key, val);
+}
+
+async function syncCollectionToFirebase(key, items) {
+  if (!window._db || !Array.isArray(items)) return;
+  // Αποθηκεύουμε ως single document για απλότητα
+  try {
+    const { doc, setDoc } = { doc: window._fbDoc, setDoc: window._fbSet };
+    if (doc && setDoc) {
+      await setDoc(doc(window._db, 'admin_data', key), { items, updatedAt: new Date().toISOString() });
+    }
+  } catch(e) { /* silent fail */ }
+}
+
+// Φόρτωσε admin data από Firebase
+window.loadAdminDataFromFirebase = async function() {
+  if (!window._db) return;
+  const keys = ['teams','players','results','schedule','videos'];
+  await Promise.all(keys.map(async key => {
+    try {
+      const snap = await window._fbDocs(window._fbCol(window._db, 'admin_data'));
+      snap.docs.forEach(d => {
+        if (d.id === key && d.data().items) {
+          if (!window._fbCache) window._fbCache = {};
+          window._fbCache[key] = d.data().items;
+        }
+      });
+    } catch(e) { /* silent */ }
+  }));
+};
+
+// Render όλα από Firebase cache
+window.renderAllFromCache = function() {
+  renderDashboard();
+  renderTeamsTable();
+  renderPlayersTable();
+  renderResultsTable();
+  renderScheduleTable();
+  renderVideosTable();
+  renderRegistrationsTable();
+  refreshTeamSelects();
+};
 
 function loadAll() {
   renderDashboard();
@@ -536,6 +624,15 @@ function loadAll() {
   renderRegistrationsTable();
   refreshTeamSelects();
   updateRegStatus();
+  // Φόρτωσε από Firebase
+  const tryFirebase = () => {
+    if (window.loadAllFromFirebase) {
+      window.loadAllFromFirebase();
+    } else {
+      setTimeout(tryFirebase, 300);
+    }
+  };
+  setTimeout(tryFirebase, 600);
 }
 
 // ── TEAMS ──
@@ -589,9 +686,43 @@ function deletePlayer(id) {
 }
 function renderPlayersTable() {
   const players = getData('players', []);
-  document.getElementById('players-table').innerHTML = players.length
-    ? players.map(p => `<tr><td>${p.name}</td><td>${p.team}</td><td>${p.num||'—'}</td><td>${p.ppg}</td><td>${p.apg}</td><td>${p.rpg}</td><td class="actions"><button class="btn btn-danger btn-sm" onclick="deletePlayer(${p.id})">Διαγραφή</button></td></tr>`).join('')
-    : '<tr><td colspan="7" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν αθλητές ακόμα.</td></tr>';
+  if (!players.length) {
+    document.getElementById('players-table').innerHTML =
+      '<tr><td colspan="7" style="color:var(--gray);text-align:center;padding:24px;">Δεν υπάρχουν αθλητές ακόμα.</td></tr>';
+    return;
+  }
+  // Ταξινόμηση: ανά ομάδα, μετά αλφαβητικά
+  const sorted = [...players].sort((a,b) => {
+    const teamCmp = (a.team||'').localeCompare(b.team||'', 'el');
+    if (teamCmp !== 0) return teamCmp;
+    return (a.name||'').localeCompare(b.name||'', 'el');
+  });
+  // Ομαδοποίηση
+  let html = '';
+  let lastTeam = null;
+  sorted.forEach(p => {
+    if (p.team !== lastTeam) {
+      // Διαχωριστική γραμμή ομάδας
+      html += `<tr>
+        <td colspan="7" style="background:var(--dark2);padding:10px 14px;border-top:2px solid var(--orange);">
+          <span style="font-family:var(--font-c);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--orange);">
+            ● ${p.team || '—'}
+          </span>
+        </td>
+      </tr>`;
+      lastTeam = p.team;
+    }
+    html += `<tr style="background:rgba(255,255,255,0.01);">
+      <td>${p.name}</td>
+      <td style="color:var(--gray);font-size:13px;">${p.team}</td>
+      <td>${p.num||'—'}</td>
+      <td>${p.ppg||0}</td>
+      <td>${p.apg||0}</td>
+      <td>${p.rpg||0}</td>
+      <td class="actions"><button class="btn btn-danger btn-sm" onclick="deletePlayer(${p.id})">Διαγραφή</button></td>
+    </tr>`;
+  });
+  document.getElementById('players-table').innerHTML = html;
 }
 
 // ── RESULTS ──
